@@ -1,0 +1,1335 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>时光穿越 · 津门十二时辰</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&family=Noto+Serif+SC:wght@300;400;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold-1: #FFD700;
+  --gold-2: #FFA500;
+  --gold-3: #DAA520;
+  --gold-4: #B8860B;
+  --gold-light: #FFF8DC;
+  --gold-glow: rgba(255, 215, 0, 0.6);
+  --gold-dim: rgba(255, 215, 0, 0.35);
+  --ink-black: #050510;
+  --night-blue: #0d1b3d;
+  --deep-night: #0a0a1a;
+  --night-purple: #1a0a2e;
+  --food: #FF8C00;
+  --culture: #BA55D3;
+  --scenic: #4A90E2;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+html, body {
+  width: 100%;
+  min-height: 100vh;
+  font-family: 'Noto Serif SC', 'ZCOOL XiaoWei', serif;
+  background: var(--ink-black);
+  color: #fff;
+  overflow-x: hidden;
+}
+
+/* ===== 星空底色 ===== */
+.stars-bg {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(2px 2px at 18% 28%, rgba(255,215,0,0.28), transparent),
+    radial-gradient(1px 1px at 42% 72%, rgba(255,255,255,0.18), transparent),
+    radial-gradient(1.5px 1.5px at 62% 18%, rgba(255,215,0,0.2), transparent),
+    radial-gradient(1px 1px at 82% 52%, rgba(255,255,255,0.14), transparent),
+    radial-gradient(1px 1px at 12% 82%, rgba(255,215,0,0.18), transparent),
+    radial-gradient(ellipse at center, var(--night-blue) 0%, var(--ink-black) 100%);
+  animation: twinkle 5s ease-in-out infinite alternate;
+}
+@keyframes twinkle { from { opacity: 0.75; } to { opacity: 1; } }
+canvas#particleCanvas {
+  position: fixed; top: 0; left: 0; z-index: 1; pointer-events: none;
+}
+
+/* ===== 顶部导航 ===== */
+.top-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 5%;
+  background: rgba(5,5,16,0.72);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(255,215,0,0.1);
+  transition: padding 0.3s ease, background 0.3s ease;
+}
+.top-nav.scrolled { padding: 12px 5%; background: rgba(5,5,16,0.94); }
+.nav-logo {
+  font-family: 'Ma Shan Zheng', cursive;
+  font-size: 26px;
+  background: linear-gradient(135deg, var(--gold-1), var(--gold-2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 4px;
+  text-decoration: none;
+  filter: drop-shadow(0 0 14px rgba(255,215,0,0.25));
+}
+.nav-center { display: flex; align-items: center; gap: 12px; }
+.progress-badge {
+  display: flex; align-items: center; gap: 8px;
+  font-family: 'ZCOOL XiaoWei', serif;
+  font-size: 13px;
+  color: rgba(255,215,0,0.7);
+  letter-spacing: 3px;
+  padding: 7px 18px;
+  border: 1px solid rgba(255,215,0,0.25);
+  border-radius: 24px;
+  background: rgba(255,215,0,0.05);
+}
+.progress-badge .seal-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--gold-1);
+  box-shadow: 0 0 8px var(--gold-glow);
+}
+.progress-badge .count {
+  font-family: 'Ma Shan Zheng', cursive;
+  font-size: 19px;
+  color: var(--gold-1);
+}
+.progress-badge .total { color: rgba(255,215,0,0.4); }
+.back-link {
+  font-family: 'ZCOOL XiaoWei', serif;
+  font-size: 14px;
+  color: rgba(255,215,0,0.55);
+  text-decoration: none;
+  letter-spacing: 3px;
+  transition: color 0.3s, letter-spacing 0.3s;
+}
+.back-link:hover { color: var(--gold-1); letter-spacing: 5px; }
+
+.main-wrap { position: relative; z-index: 2; }
+
+/* ===== 英雄区 ===== */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center;
+  overflow: hidden;
+  padding: 110px 5% 70px;
+}
+.hero-bg {
+  position: absolute; inset: 0;
+  background: url('assets/game4-hero.png') center / cover no-repeat;
+  transform: scale(1.1);
+  will-change: transform;
+}
+.hero-overlay {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse at center, rgba(5,5,16,0.32) 0%, rgba(5,5,16,0.7) 60%, rgba(5,5,16,0.97) 100%),
+    linear-gradient(180deg, rgba(5,5,16,0.55) 0%, transparent 30%, transparent 55%, var(--ink-black) 100%);
+}
+.hero-eyebrow {
+  font-family: 'ZCOOL XiaoWei', serif;
+  font-size: 13px;
+  color: rgba(255,215,0,0.5);
+  letter-spacing: 10px;
+  margin-bottom: 26px;
+  position: relative; z-index: 3;
+  opacity: 0;
+  animation: fadeUp 1s ease 0.3s forwards;
+}
+.hero-title {
+  font-family: 'Ma Shan Zheng', cursive;
+  font-size: clamp(72px, 14vw, 180px);
+  line-height: 1;
+  letter-spacing: clamp(8px, 3vw, 36px);
+  background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold-1) 40%, var(--gold-2) 70%, var(--gold-3) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 60px rgba(255,215,0,0.35));
+  position: relative; z-index: 3;
+  opacity: 0;
+  transform: translateY(50px);
+  animation: fadeUp 1.4s cubic-bezier(0.16,1,0.3,1) 0.5s forwards;
+}
+.hero-subtitle {
+  font-family: 'ZCOOL XiaoWei', serif;
+  font-size: clamp(14px, 2vw, 20px);
+  color: rgba(255,215,0,0.6);
+  letter-spacing: clamp(4px, 1.5vw, 12px);
+  margin-top: 26px;
+  position: relative; z-index: 3;
+  opacity: 0;
+  animation: fadeUp 1.1s ease 1s forwards;
+}
+.hero-line {
+  width: 1px; height: 56px;
+  background: linear-gradient(to bottom, transparent, var(--gold-dim), transparent);
+  margin: 30px auto 0;
+  position: relative; z-index: 3;
+  opacity: 0;
+  animation: fadeUp 1s ease 1.3s forwards;
+}
+.hero-actions {
+  position: relative; z-index: 3;
+  display: flex; gap: 18px; margin-top: 8px;
+  opacity: 0;
+  animation: fadeUp 1s ease 1.5s forwards;
+}
+.start-btn {
+  font-family: 'Ma Shan Zheng', cursive;
+  font-size: 18px;
+  color: var(--ink-black);
+  background: linear-gradient(135deg, var(--gold-1), var(--gold-2));
+  border: none;
+  padding: 14px 44px;
+  letter-spacing: 6px;
+  cursor: pointer;
+  border-radius: 10px;
+  transition: all 0.35s cubic-bezier(0.23,1,0.32,1);
+  box-shadow: 0 8px 24px rgba(255,215,0,0.3);
+}
+.start-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(255,215,0,0.45);
+}
+.scroll-cue {
+  position: absolute; bottom: 34px; left: 50%;
+  transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  z-index: 3;
+  opacity: 0;
+  animation: fadeUp 1s ease 1.8s forwards, cueBob 2.2s ease-in-out 2.8s infinite;
+}
+.scroll-cue span {
+  font-family: 'ZCOOL XiaoWei', serif;
+  font-size: 11px;
+  color: rgba(255,215,0,0.4);
+  letter-spacing: 5px;
+}
+.scroll-line {
+  width: 1px; height: 38px;
+  background: linear-gradient(to bottom, var(--gold-1), transparent);
+}
+.scroll-line::after {
+  content: ''; position: absolute; bottom: 0; left: -3px;
+  width: 7px; height: 7px;
+  border-right: 1px solid var(--gold-1);
+  border-bottom: 1px solid var(--gold-1);
+  transform: rotate(45deg);
+}
+@keyframes fadeUp { 0% { opacity: 0; transform: translateY(34px); } 100% { opacity: 1; transform: translateY(0); } }
+@keyframes cueBob { 0%,100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(9px); } }
+
+/* ===== 时间轴 ===== */
+.timeline {
+  position: fixed; top: 50%; left: 28px;
+  transform: translateY(-50%);
+  z-index: 50;
+  display: flex; flex-direction: column; gap: 0;
+}
+.timeline-node {
+  position: relative;
+  display: flex; align-items: center; gap: 14px;
+  padding: 13px 0;
+  cursor: pointer;
+  transition: all 0.4s ease;
+}
+.timeline-node::before {
+  content: ''; position: absolute;
+  left: 11px; top: 50%;
+  width: 1px; height: 100%;
+  background: rgba(255,215,0,0.15);
+  transform: translateY(0);
+}
+.timeline-node:last-child::before { display: none; }
+.timeline-dot {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,215,0,0.25);
+  background: var(--ink-black);
+  flex-shrink: 0;
+  position: relative;
+  transition: all 0.4s ease;
+  z-index: 2;
+}
+.timeline-dot::after {
+  content: ''; position: absolute; inset: 4px;
+  border-radius: 50%;
+  background: transparent;
+  transition: all 0.4s ease;
+}
+.timeline-node.completed .timeline-dot {
+  border-color: var(--gold-3);
+}
+.timeline-node.completed .timeline-dot::after {
+  background: var(--gold-3);
+}
+.timeline-node.active .timeline-dot {
+  border-color: var(--gold-1);
+  box-shadow: 0 0 16px var(--gold-glow);
+  animation: pulseDot 2s ease-in-out infinite;
+}
+.timeline-node.active .timeline-dot::after {
+  background: var(--gold-1);
+}
+.timeline-node.locked { opacity: 0.35; cursor: not-allowed; }
+@keyframes pulseDot {
+  0%,100% { box-shadow: 0 0 12px var(--gold-glow); }
+  50% { box-shadow: 0 0 24px var(--gold-glow), 0 0 40px rgba(255,215,0,0.3); }
+}
+.timeline-label {
+  font-family: 'Ma Shan Zheng', cursive;
+  font-size: 16px;
+  color: rgba(255,215,0,0.4);
+  letter-spacing: 3px;
+  white-space: nowrap;
+  transition: all 0.4s ease;
+}
+.timeline-node.completed .timeline-label { color: var(--gold-3); }
+.timeline-node.active .timeline-label { color: var(--gold-1); }
+.timeline-node:hover:not(.locked) .timeline-label { color: var(--gold-1); }
+
+/* ===== 身份选择 ===== */
+.identity-section {
+  position: relative;
+  min-height: 100vh;
+  padding: 90px 5% 60px;
+  display: flex; flex-direction: column; align-items: center;
+}
+.section-eyebrow {
+  font-family: 'ZCOOL XiaoWei', serif;
+  font-size: 12px;
+  color: rgba(255,215,0,0.45);
+  letter-spacing: 8px;
+  margin-bottom: 12px;
+}
+.section-title {
+  font-family: 'Ma Shan Zheng', cursive;
+  font-size: clamp(34px, 5vw, 50px);
+  background: linear-gradient(135deg, var(--gold-1), var(--gold-2), var(--gold-3));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 8px;
+  filter: drop-shadow(0 0 24px rgba(255,215,0,0.25));
+  margin-bottom: 14px;
+  text-align: center;
+}
+.section-sub {
+  font-family: 'ZCOOL XiaoWei', serif;
+  font-size: 15px;
+  color: rgba(255,215,0,0.5);
+  letter-spacing: 4px;
+  margin-bottom: 50px;
+  text-align: center;
+}
+.identity-row {
+  display: flex; flex-direction: column;
+  width: 100%; max-width: 900px;
+  gap: 26px;
+}
+.identity-block {
+  position: relative;
+  display: flex; align-items: center;
+  min-height: 200px;
+  border: 1px solid rgba(255,215,0,0.18);
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.45s cubic-bezier(0.23,1,0.32,1);
+}
+.identity-block::before {
+  content: ''; position: absolute; inset: 0;
+  background-image: var(--id-img);
+  background-size: cover; background-position: center;
+  opacity: 0.25;
+  transition: opacity 0.45s ease, transform 0.6s ease;
+  z-index: 0;
+}
+.identity-block::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(90deg, rgba(5,5,16,0.92) 0%, rgba(5,5,16,0.55) 60%, rgba(5,5,16,0.7) 100%);
+  z-index: 1;
+}
+.identity-content {
+  position: relative; z-index: 2;
+  display: flex; align-items: center; gap: 28px;
+  width: 100%; padding: 30px 40px;
+}
+.identity-char {
+  font-family: 'Ma Shan Zheng', cursive;
+  font-size: 72px;
+  background: linear-gradient(135deg, var(--gold-1), var(--gold-3));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 20px rgba(255,215,0,0.3));
+  flex-shrink: 0;
+  transition: transform 0.4s ease;
+}
+.identity-text { flex: 1; }
+.identity-name {
+  font-family: 'Ma Shan Zheng', cursive;
+  font-size: 28px;
+  color: var(--gold-1);
+  letter-spacing: 5px;
+  margin-bottom: 8px;
+}
+.identity-slogan {
+  font-family: 'ZCOOL XiaoWei', serif;
+  font-size: 16px;
+  color: rgba(255,215,0,0.6);
+  letter-spacing: 3px;
+  margin-bottom: 10px;
+}
+.identity-desc {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 13px;
+  line-height: 1.8;
+  color: rgba(255,255,255,0.6);
+}
+.identity-arrow {
+  font-family: 'ZCOOL XiaoWei', serif;
+  font-size: 13px;
+  color: rgba(255,215,0,0.4);
+  letter-spacing: 3px;
+  flex-shrink: 0;
+  transition: all 0.35s ease;
+}
+.identity-block:hover {
+  border-color: var(--gold-1);
+  transform: translateX(8px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.5), 0 0 30px rgba(255,215,0,0.12);
+}
+.identity-block:hover::before { opacity: 0.4; transform: scale(1.05); }
+.identity-block:hover .identity-char { transform: scale(1.08); }
+.identity-block:hover .identity-arrow { color: var(--gold-1); letter-spacing: 6px; }
+
+/* ===== 时辰区 ===== */
+.period-section {
+  position: relative;
+  min-height: 100vh;
+  padding: 90px 6% 60px 110px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.period-bg {
+  position: absolute; inset: 0;
+  z-index: 0;
+  transition: background 1.2s ease;
+}
+.period-overlay {
+  position: absolute; inset: 0;
+  z-index: 1;
+  background: radial-gradient(ellipse at center, transparent 0%, rgba(5,5,16,0.6) 70%, rgba(5,5,16,0.95) 100%);
+}
+.period-inner {
+  position: relative; z-index: 2;
+  width: 100%; max-width: 1000px;
+  text-align: center;
+}
+.period-time {
+  font-family: 'ZCOOL XiaoWei', serif;
+  font-size: 13px;
+  color: rgba(255,215,0,0.45);
+  letter-spacing: 8px;
+  margin-bottom: 14px;
+}
+.period-title {
+  font-family: 'Ma Shan Zheng', cursive;
+  font-size: clamp(40px, 6vw, 64px);
+  background: linear-gradient(135deg, var(--gold-light), var(--gold-1), var(--gold-2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 10px;
+  filter: drop-shadow(0 0 30px rgba(255,215,0,0.3));
+  margin-bottom: 16px;
+}
+.period-poem {
+  font-family: 'ZCOOL XiaoWei', serif;
+  font-size: 16px;
+  color: rgba(255,255,255,0.55);
+  letter-spacing: 4px;
+  margin-bottom: 50px;
+  line-height: 2;
+}
+/* 选择区 */
+.choice-area {
+  display: flex; gap: 24px;
+  width: 100%;
+  transition: gap 0.5s ease;
+}
+.choice-area.locked { gap: 0; }
+.choice-area.locked .choice-block { pointer-events: none; }
+.choice-block {
+  position: relative;
+  flex: 1;
+  min-height: 320px;
+  border: 1px solid rgba(255,215,0,0.18);
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  display: flex; flex-direction: column;
+  justify-content: flex-end;
+  transition: all 0.5s cubic-bezier(0.23,1,0.32,1);
+}
+.choice-block::before {
+  content: ''; position: absolute; inset: 0;
+  background-image: var(--ch-img, none);
+  background-size: cover; background-position: center;
+  opacity: 0.35;
+  transition: opacity 0.5s ease, transform 0.7s ease;
+}
+.choice-block.text-choice::before { opacity: 0; }
+.choice-block::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(5,5,16,0.3) 0%, rgba(5,5,16,0.75) 70%, rgba(5,5,16,0.95) 100%);
+}
+.choice-content {
+  position: relative; z-index: 2;
+  padding: 30px 28px;
+  text-align: left;
+}
+.choice-tag {
+  font-family: 'ZCOOL XiaoWei', serif;
+  font-size: 11px;
+  color: rgba(255,215,0,0.55);
+  letter-spacing: 4px;
+  margin-bottom: 10px;
+}
+.choice-name {
+  font-family: 'Ma Shan Zheng', cursive;
+  font-size: 26px;
+  color: var(--gold-1);
+  letter-spacing: 4px;
+  margin-bottom: 8px;
+}
+.choice-hint {
+  font-family: 'ZCOOL XiaoWei', serif;
+  font-size: 13px;
+  color: rgba(255,255,255,0.55);
+  letter-spacing: 2px;
+}
+.choice-block:hover:not(.chosen):not(.dismissed) {
+  border-color: var(--gold-1);
+  transform: translateY(-6px);
+  box-shadow: 0 16px 50px rgba(0,0,0,0.5), 0 0 30px rgba(255,215,0,0.15);
+}
+.choice-block:hover:not(.chosen):not(.dismissed)::before { opacity: 0.5; transform: scale(1.05); }
+.choice-block:hover:not(.chosen):not(.dismissed) .choice-name { color: var(--gold-light); }
+
+/* 选中态：展开 */
+.choice-block.chosen {
+  flex: 2;
+  cursor: default;
+  border-color: var(--gold-1);
+  box-shadow: 0 16px 50px rgba(0,0,0,0.5), 0 0 40px rgba(255,215,0,0.2);
+}
+.choice-block.chosen::before { opacity: 0.45; transform: scale(1.02); }
+.choice-block.chosen .choice-story {
+  max-height: 600px;
+  opacity: 1;
+  margin-top: 18px;
+}
+.choice-story {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 14px;
+  line-height: 2;
+  color: rgba(255,255,255,0.78);
+  text-align: justify;
+  text-indent: 2em;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.7s ease, opacity 0.5s ease 0.2s, margin-top 0.5s ease;
+}
+/* 未选态：淡出 */
+.choice-block.dismissed {
+  flex: 0;
+  min-width: 0;
+  min-height: 0;
+  height: 0;
+  opacity: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* 继续按钮 */
+.next-btn-wrap {
+  width: 100%;
+  text-align: center;
+  margin-top: 40px;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.6s ease, opacity 0.5s ease;
+}
+.next-btn-wrap.shown {
+  max-height: 100px;
+  opacity: 1;
+}
+.next-btn {
+  font-family: 'Ma Shan Zheng', cursive;
+  font-size: 18px;
+  color: var(--ink-black);
+  background: linear-gradient(135deg, var(--gold-1), var(--gold-2));
+  border: none;
+  padding: 13px 50px;
+  letter-spacing: 6px;
+  cursor: pointer;
+  border-radius: 30px;
+  transition: all 0.35s cubic-bezier(0.23,1,0.32,1);
+  box-shadow: 0 8px 24px rgba(255,215,0,0.3);
+}
+.next-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(255,215,0,0.45);
+  letter-spacing: 8px;
+}
+
+/* 已完成时辰 */
+.period-section.done .choice-area { display: none; }
+.period-section.done .period-done {
+  display: flex;
+}
+.period-done {
+  display: none;
+  flex-direction: column; align-items: center; gap: 20px;
+  margin-top: 10px;
+}
+.period-done-img {
+  width: 220px; height: 220px;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(255,215,0,0.3);
+  box-shadow: 0 14px 40px rgba(0,0,0,0.5), 0 0 30px rgba(255,215,0,0.12);
+}
+.period-done-img img { width: 100%; height: 100%; object-fit: cover; }
+.period-done-text {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 14px;
+  line-height: 2;
+  color: rgba(255,255,255,0.78);
+  text-align: justify;
+  max-width: 560px;
+  text-indent: 2em;
+}
+.period-done-tag {
+  font-family: 'ZCOOL XiaoWei', serif;
+  font-size: 14px;
+  color: var(--gold-1);
+  letter-spacing: 4px;
+}
+
+/* ===== 行程总结 ===== */
+.summary-section {
+  position: relative;
+  min-height: 100vh;
+  padding: 90px 5% 70px 110px;
+  display: flex; flex-direction: column; align-items: center;
+}
+.summary-list {
+  width: 100%; max-width: 800px;
+  display: flex; flex-direction: column; gap: 18px;
+  margin-bottom: 50px;
+}
+.summary-row {
+  display: flex; align-items: center; gap: 22px;
+  padding: 22px 28px;
+  border: 1px solid rgba(255,215,0,0.15);
+  border-radius: 12px;
+  background: rgba(13,27,61,0.4);
+  transition: all 0.4s ease;
+  opacity: 0;
+  transform: translateX(-20px);
+}
+.summary-row.shown { opacity: 1; transform: translateX(0); }
+.summary-row:hover {
+  border-color: rgba(255,215,0,0.4);
+  background: rgba(13,27,61,0.6);
+}
+.summary-time {
+  font-family: 'Ma Shan Zheng', cursive;
+  font-size: 24px;
+  color: var(--gold-1);
+  letter-spacing: 3px;
+  flex-shrink: 0;
+  min-width: 80px;
+}
+.summary-divider {
+  width: 1px; height: 44px;
+  background: linear-gradient(to bottom, transparent, var(--gold-dim), transparent);
+  flex-shrink: 0;
+}
+.summary-choice {
+  font-family: 'ZCOOL XiaoWei', serif;
+  font-size: 17px;
+  color: rgba(255,255,255,0.85);
+  letter-spacing: 2px;
+}
+.summary-identity {
+  font-family: 'ZCOOL XiaoWei', serif;
+  font-size: 15px;
+  color: rgba(255,215,0,0.55);
+  letter-spacing: 4px;
+  text-align: center;
+  margin-bottom: 30px;
+}
+.summary-identity span {
+  font-family: 'Ma Shan Zheng', cursive;
+  font-size: 22px;
+  color: var(--gold-1);
+}
+.replay-btn {
+  font-family: 'Ma Shan Zheng', cursive;
+  font-size: 20px;
+  color: var(--gold-1);
+  background: transparent;
+  border: 1px solid rgba(255,215,0,0.4);
+  padding: 14px 50px;
+  letter-spacing: 6px;
+  cursor: pointer;
+  border-radius: 30px;
+  transition: all 0.35s ease;
+}
+.replay-btn:hover {
+  color: var(--ink-black);
+  background: linear-gradient(135deg, var(--gold-1), var(--gold-2));
+  border-color: transparent;
+  box-shadow: 0 8px 28px rgba(255,215,0,0.4);
+  letter-spacing: 8px;
+}
+
+/* ===== 成就覆盖层 ===== */
+.achv-overlay {
+  position: fixed; inset: 0; z-index: 300;
+  background: radial-gradient(ellipse at center, rgba(13,27,61,0.95), rgba(5,5,16,0.99));
+  backdrop-filter: blur(11px);
+  -webkit-backdrop-filter: blur(11px);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 40px 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s ease;
+}
+.achv-overlay.active { opacity: 1; pointer-events: auto; }
+.achv-seal {
+  position: relative;
+  width: 190px; height: 190px;
+  margin-bottom: 40px;
+  display: flex; align-items: center; justify-content: center;
+}
+.achv-seal-ring {
+  position: absolute; inset: 0;
+  border: 3px solid var(--gold-1);
+  border-radius: 50%;
+  box-shadow: 0 0 55px var(--gold-glow), inset 0 0 32px rgba(255,215,0,0.3);
+}
+.achv-seal-ring::before {
+  content: ''; position: absolute; inset: 8px;
+  border: 1px dashed rgba(255,215,0,0.5);
+  border-radius: 50%;
+  animation: spin 18s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.achv-seal-ring::after {
+  content: ''; position: absolute; inset: -16px;
+  border: 1px solid rgba(255,215,0,0.2);
+  border-radius: 50%;
+  animation: spin 30s linear infinite reverse;
+}
+.achv-seal-char {
+  font-family: 'Ma Shan Zheng', cursive;
+  font-size: 90px;
+  background: linear-gradient(135deg, var(--gold-1), var(--gold-2), var(--gold-3));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 40px var(--gold-glow));
+  z-index: 2;
+  animation: float 3s ease-in-out infinite;
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
+}
+.achv-title {
+  font-family: 'Ma Shan Zheng', cursive;
+  font-size: clamp(40px, 7vw, 56px);
+  background: linear-gradient(135deg, var(--gold-light), var(--gold-1), var(--gold-2), var(--gold-3));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 12px;
+  margin-bottom: 16px;
+  filter: drop-shadow(0 0 50px rgba(255,215,0,0.4));
+  text-align: center;
+}
+.achv-desc {
+  font-family: 'ZCOOL XiaoWei', serif;
+  font-size: clamp(14px, 2vw, 17px);
+  line-height: 2;
+  color: rgba(255,215,0,0.6);
+  letter-spacing: 4px;
+  text-align: center;
+  max-width: 560px;
+  margin-bottom: 36px;
+}
+.achv-close {
+  font-family: 'ZCOOL XiaoWei', serif;
+  font-size: 14px;
+  color: rgba(255,215,0,0.65);
+  letter-spacing: 4px;
+  background: none;
+  border: 1px solid rgba(255,215,0,0.32);
+  padding: 11px 36px;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.achv-close:hover {
+  color: var(--gold-1);
+  border-color: var(--gold-1);
+  background: rgba(255,215,0,0.08);
+  box-shadow: 0 0 22px rgba(255,215,0,0.2);
+}
+
+/* ===== 底部 ===== */
+.footer-deco {
+  position: relative; z-index: 2;
+  text-align: center;
+  padding: 30px 0 50px;
+}
+.footer-deco p {
+  font-family: 'ZCOOL XiaoWei', serif;
+  font-size: 13px;
+  color: rgba(255,215,0,0.3);
+  letter-spacing: 5px;
+}
+
+@media (max-width: 768px) {
+  .timeline { display: none; }
+  .period-section { padding-left: 6%; }
+  .summary-section { padding-left: 5%; }
+  .choice-area { flex-direction: column; }
+  .identity-content { flex-direction: column; text-align: center; gap: 14px; padding: 24px 20px; }
+  .identity-char { font-size: 56px; }
+  .hero-title { font-size: 60px; letter-spacing: 8px; }
+  .progress-badge { padding: 5px 12px; font-size: 12px; }
+  .back-link { font-size: 13px; }
+}
+</style>
+</head>
+<body>
+<div class="stars-bg"></div>
+<canvas id="particleCanvas"></canvas>
+
+<nav class="top-nav" id="topNav">
+  <a href="index.html" class="nav-logo">津门游</a>
+  <div class="nav-center">
+    <div class="progress-badge">
+      <span class="seal-dot"></span>
+      <span>时辰</span>
+      <span class="count" id="navCount">0</span>
+      <span class="total">/ 6</span>
+    </div>
+  </div>
+  <a href="journey.html" class="back-link">← 启程</a>
+</nav>
+
+<!-- 时间轴 -->
+<div class="timeline" id="timeline"></div>
+
+<div class="main-wrap">
+  <!-- 英雄区 -->
+  <section class="hero">
+    <div class="hero-bg" id="heroBg"></div>
+    <div class="hero-overlay"></div>
+    <p class="hero-eyebrow">天 津 · 时 光 穿 越</p>
+    <h1 class="hero-title">时光穿越</h1>
+    <p class="hero-subtitle">十 二 时 辰 · 津 门 一 日</p>
+    <div class="hero-line"></div>
+    <div class="hero-actions">
+      <button class="start-btn" id="startBtn">启程穿越</button>
+    </div>
+    <div class="scroll-cue">
+      <span>向下择路</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- 身份选择 -->
+  <section class="identity-section" id="identitySection">
+    <p class="section-eyebrow">命 运 之 选</p>
+    <h2 class="section-title">选择身份</h2>
+    <p class="section-sub">择一身份 · 入津门 · 过一日</p>
+    <div class="identity-row" id="identityRow"></div>
+  </section>
+
+  <!-- 时辰区容器 -->
+  <div id="periodsContainer"></div>
+
+  <!-- 行程总结 -->
+  <section class="summary-section" id="summarySection" style="display:none;">
+    <p class="section-eyebrow">一 日 回 望</p>
+    <h2 class="section-title">津门行程</h2>
+    <p class="summary-identity" id="summaryIdentity"></p>
+    <div class="summary-list" id="summaryList"></div>
+    <button class="replay-btn" id="replayBtn">重新穿越</button>
+  </section>
+</div>
+
+<!-- 成就覆盖层 -->
+<div class="achv-overlay" id="achvOverlay">
+  <div class="achv-seal">
+    <div class="achv-seal-ring"></div>
+    <span class="achv-seal-char" id="achvChar">游</span>
+  </div>
+  <h2 class="achv-title" id="achvTitle">津门游侠</h2>
+  <p class="achv-desc">十 二 时 辰 · 一 日 津 门 · 命 运 自 择</p>
+  <button class="achv-close" id="achvClose">继续赏玩</button>
+</div>
+
+<div class="footer-deco">
+  <p>津 门 游 · 时 光 穿 越 · 十 二 时 辰</p>
+</div>
+
+<script>
+/* ==================== 粒子背景 ==================== */
+const canvas = document.getElementById('particleCanvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+function initParticles() {
+  particles = [];
+  const count = Math.min(60, Math.floor(canvas.width * canvas.height / 28000));
+  for (let i = 0; i < count; i++) {
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 1.4 + 0.4,
+      vx: (Math.random() - 0.5) * 0.22,
+      vy: (Math.random() - 0.5) * 0.22,
+      a: Math.random() * 0.4 + 0.08,
+      c: Math.random() > 0.5 ? '255,215,0' : '255,255,255'
+    });
+  }
+}
+initParticles();
+window.addEventListener('resize', initParticles);
+
+function tickParticles() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles.forEach(p => {
+    p.x += p.vx; p.y += p.vy;
+    if (p.x < 0) p.x = canvas.width;
+    if (p.x > canvas.width) p.x = 0;
+    if (p.y < 0) p.y = canvas.height;
+    if (p.y > canvas.height) p.y = 0;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(${p.c},${p.a})`;
+    ctx.fill();
+  });
+  requestAnimationFrame(tickParticles);
+}
+tickParticles();
+
+/* ==================== 身份数据 ==================== */
+const identities = [
+  { id: 'merchant', char: '商', name: '商人', slogan: '行商天下，品味津门繁华',
+    desc: '你走南闯北，见惯了市井烟火。此番入津，最爱那街头巷尾的吃食与热闹，繁华市井最合你意。',
+    img: 'assets/treasure-jianbing.png' },
+  { id: 'scholar', char: '书', name: '书生', slogan: '寻文访古，探津门文脉',
+    desc: '你一袭长衫，心怀文墨。来津门不为吃食，只为寻那古街旧巷、年画彩塑中的文脉传承。',
+    img: 'assets/treasure-guhuajie.png' },
+  { id: 'traveler', char: '旅', name: '旅人', slogan: '随性而行，遇津门百态',
+    desc: '你行囊轻简，随性而至。不拘一格，或登高望远，或闲坐听曲，津门百态皆可入眼。',
+    img: 'assets/treasure-wudadao.png' },
+];
+
+/* ==================== 时辰数据 ==================== */
+const periods = [
+  {
+    id: 'mao', time: '清晨 5-7时', name: '卯时', title: '卯时 · 晨曦初露',
+    poem: '晓星方隐去，晨光破云来。\n津门初醒时，烟火满长街。',
+    bg: 'linear-gradient(180deg, #2a1a0e 0%, #3d2818 40%, #0d1b3d 100%)',
+    choices: [
+      { tag: '市井烟火', name: '去西北角吃早点', hint: '煎饼果子 · 锅巴菜 · 晨间烟火',
+        img: 'assets/treasure-jianbing.png', type: 'food',
+        story: '西北角是天津早点的圣地。你循着油香来到街角，只见绿豆面糊在热铁板上"滋啦"一声摊开，磕入鸡蛋，撒上葱花，裹入薄脆，刷上甜面酱与腐乳——一套地道的煎饼果子便成了。旁边的锅巴菜浇上醇厚卤汁，滑嫩鲜香。天津人说"要想吃好，得起大早"，这一口烟火气，是津门最实在的清晨滋味。' },
+      { tag: '古街寻踪', name: '去古文化街漫步', hint: '青砖灰瓦 · 雕梁画栋 · 晨光古街',
+        img: 'assets/treasure-guhuajie.png', type: 'culture',
+        story: '清晨的古文化街少了几分喧闹，多了几分古意。青砖灰瓦之间，天后宫的香火已袅袅升起。街边的泥人张彩塑、杨柳青年画铺子刚刚卸下门板，老手艺人正在擦拭案台。你漫步其中，脚下是岁月磨亮的石板，耳畔是晨风拂过雕梁的细响，仿佛一脚踏入了旧时的津门。' },
+    ]
+  },
+  {
+    id: 'si', time: '上午 9-11时', name: '巳时', title: '巳时 · 日上三竿',
+    poem: '日高光影直，街巷渐喧阗。\n洋楼与年画，各是一重天。',
+    bg: 'linear-gradient(180deg, #1a2a4a 0%, #2a3a5a 40%, #0d1b3d 100%)',
+    choices: [
+      { tag: '万国建筑', name: '逛五大道看洋楼', hint: '英法意德 · 名人故居 · 万国博览',
+        img: 'assets/treasure-wudadao.png', type: 'scenic',
+        story: '五大道是天津的"万国建筑博览会"。英、法、意、德、西班牙等国风格的洋楼小院鳞次栉比，当年张学良、顾维钧、溥仪等名人曾在此居住。你沿着马场道缓行，藤蔓爬满红砖墙，拱窗与塔楼相映成趣，每一栋小楼都藏着一段近代史的往事，仿佛穿越回上世纪二十年代的租界岁月。' },
+      { tag: '非遗匠心', name: '去杨柳青看年画', hint: '木版彩绘 · 连年有余 · 四大年画',
+        img: 'assets/treasure-yangliuqing.png', type: 'culture',
+        story: '杨柳青镇是中国四大年画之乡。年画始见于明代崇祯年间，以"勾、刻、印、绘、裱"五步工艺闻名。你走进作坊，看老艺人一刀一刀在木版上刻出纹样，再套色印于宣纸，最后手工彩绘——那胖娃娃抱鲤鱼的"连年有余"便跃然纸上，寓意年年有余、吉祥如意，是津门最喜庆的民间艺术。' },
+    ]
+  },
+  {
+    id: 'wu', time: '中午 11-13时', name: '午时', title: '午时 · 日正当空',
+    poem: '正午阳光烈，腹中咕噜鸣。\n包子与茶馆，两般皆是情。',
+    bg: 'linear-gradient(180deg, #2a2a1e 0%, #3a3a20 40%, #0d1b3d 100%)',
+    choices: [
+      { tag: '天津三绝', name: '吃狗不理包子', hint: '薄皮大馅 · 十八褶 · 百年老字号',
+        img: 'assets/treasure-goubuli.png', type: 'food',
+        story: '狗不理包子始创于1858年，为"天津三绝"之首。薄皮大馅十八褶，咬一口汤汁四溢，鲜香满口。创始人高贵友小名"狗子"，因生意太忙顾不上说话，食客戏称"狗子卖包子，不理人"，遂得名"狗不理"。你坐在老店里，热气腾腾的笼屉端上桌，这一口百年滋味，是津门最讲究的面食。' },
+      { tag: '相声码头', name: '去茶馆小憩', hint: '一桌一扇 · 说学逗唱 · 非遗传承',
+        img: 'assets/treasure-xiangsheng.png', type: 'culture',
+        story: '天津是中国相声的"码头"，马三立、侯宝林、郭德纲皆从天津走向全国。午后茶馆里，一桌一扇一抚尺，说学逗唱，包袱不断。你嗑着瓜子品着茶，听台上逗哏捧哏你来我往，满堂哄笑。天津人骨子里带着幽默，这份茶馆里的惬意，是津门最地道的午后时光。' },
+    ]
+  },
+  {
+    id: 'you', time: '傍晚 17-19时', name: '酉时', title: '酉时 · 夕阳西下',
+    poem: '落日熔金处，霞光染半城。\n登塔或漫步，各有夕阳情。',
+    bg: 'linear-gradient(180deg, #2a1a1e 0%, #3a2020 40%, #1a0a2e 100%)',
+    choices: [
+      { tag: '津门十景', name: '登天塔看日落', hint: '415米高塔 · 旋转餐厅 · 俯瞰全城',
+        img: 'assets/treasure-tianta.png', type: 'scenic',
+        story: '天塔即天津广播电视塔，高415.2米，"天塔旋云"为津门十景之一。你乘电梯直上248米的观光平台，夕阳正缓缓沉入地平线，整座津城被镀上一层金红。海河如带穿城而过，高楼矮房尽收眼底。待暮色四合，华灯初上，你站在云端之上，看一座城从白昼过渡到夜晚，壮观而温柔。' },
+      { tag: '地中海风', name: '去意风区散步', hint: '亚洲唯一 · 意式洋楼 · 梁启超故居',
+        img: 'assets/treasure-yifengqu.png', type: 'scenic',
+        story: '意式风情区是亚洲唯一大规模意大利风格建筑群，现存200余栋地中海风格洋楼。这里曾是意大利租界，梁启超、曹禺等文化名人曾在此居住。夕阳下，露天咖啡馆的遮阳伞尚未收起，欧式拱廊与铸铁路灯被余晖染成蜜色。你漫步其间，仿佛一脚踏入了南欧的小镇，浪漫得不太真实。' },
+    ]
+  },
+  {
+    id: 'xu', time: '入夜 19-21时', name: '戌时', title: '戌时 · 华灯初上',
+    poem: '华灯初上夜，星光与灯辉。\n摩天轮转处，笑语满茶帷。',
+    bg: 'linear-gradient(180deg, #0a0a2e 0%, #1a0a3e 40%, #050510 100%)',
+    choices: [
+      { tag: '海河地标', name: '坐天津之眼看夜景', hint: '世界唯一 · 桥上摩天轮 · 120米高空',
+        img: 'assets/treasure-tianjineye.png', type: 'scenic',
+        story: '天津之眼是世界唯一建在桥上的摩天轮，直径110米，最高点距地面120米。夜幕降临，巨大的轮盘在海河之上缓缓转动，将整座津城的璀璨夜色尽收眼底。你坐在轿厢里缓缓升起，脚下是流光溢彩的海河两岸，远处是万家灯火。一圈30分钟，恰好把津门的夜色看了一个遍，浪漫而壮阔。' },
+      { tag: '夜场相声', name: '去听相声', hint: '夜场茶馆 · 包袱不断 · 津味夜生活',
+        img: 'assets/treasure-xiangsheng.png', type: 'culture',
+        story: '入夜的相声茶馆比白天更热闹。台上醒木一拍，台下笑声炸开。夜场相声格外放得开，逗哏包袱一个接一个，捧哏接得严丝合缝。你端着盖碗茶，嗑着瓜子，身边的天津观众接茬起哄，满堂其乐融融。天津人说"不听相声，不算来过天津"，这便是津门最热闹的夜生活。' },
+    ]
+  },
+  {
+    id: 'hai', time: '深夜 21-23时', name: '亥时', title: '亥时 · 夜阑人静',
+    poem: '夜阑人静处，月照海河清。\n或行或品茗，一日将归零。',
+    bg: 'linear-gradient(180deg, #050510 0%, #0a0a1a 40%, #050510 100%)',
+    choices: [
+      { tag: '月下漫步', name: '海河畔散步赏月', hint: '夜风拂柳 · 月映波心 · 静赏津门',
+        img: 'assets/game4-hai-moon.png', type: 'scenic',
+        story: '深夜的海河褪去了白日的喧嚣。你沿着河堤缓行，夜风拂过岸柳，河面映着两岸残灯与一轮明月。远处的天津之眼已停了转动，像一枚静默的圆环嵌在夜色里。偶尔有夜钓的老人坐在石阶上，不说话，只看着浮漂。整座城安静下来，你听见自己的脚步声与河水的轻响，这一日，在静默中慢慢归零。' },
+      { tag: '独坐品茗', name: '找个茶馆品茶回味', hint: '一盏清茶 · 回味一日 · 静思冥想',
+        img: 'assets/game4-hai-tea.png', type: 'culture',
+        story: '你找了一间还亮着灯的小茶馆，要了一壶茉莉花茶。茶汤澄黄，花香幽幽。你独坐窗边，慢慢回味这一日的津门时光——晨间的煎饼烟火、午后的相声笑语、黄昏的登塔远眺、入夜的摩天轮转。一日走过十二时辰，仿佛过了一年。茶凉了又续，夜深了，你也该歇了。这一盏茶，是给自己的一日告别。' },
+    ]
+  },
+];
+
+/* ==================== 状态 ==================== */
+let state = {
+  identity: null,
+  current: 0,
+  choices: [], // 每个时辰所选的choice index
+};
+
+const identityRow = document.getElementById('identityRow');
+const periodsContainer = document.getElementById('periodsContainer');
+const timeline = document.getElementById('timeline');
+const summarySection = document.getElementById('summarySection');
+const navCount = document.getElementById('navCount');
+const heroBg = document.getElementById('heroBg');
+const topNav = document.getElementById('topNav');
+const startBtn = document.getElementById('startBtn');
+const replayBtn = document.getElementById('replayBtn');
+const achvOverlay = document.getElementById('achvOverlay');
+const achvClose = document.getElementById('achvClose');
+
+/* ==================== 渲染身份 ==================== */
+function renderIdentities() {
+  identityRow.innerHTML = '';
+  identities.forEach(id => {
+    const block = document.createElement('div');
+    block.className = 'identity-block';
+    block.style.setProperty('--id-img', `url('${id.img}')`);
+    block.innerHTML = `
+      <div class="identity-content">
+        <div class="identity-char">${id.char}</div>
+        <div class="identity-text">
+          <div class="identity-name">${id.name}</div>
+          <div class="identity-slogan">${id.slogan}</div>
+          <div class="identity-desc">${id.desc}</div>
+        </div>
+        <div class="identity-arrow">入津门 →</div>
+      </div>
+    `;
+    block.addEventListener('click', () => selectIdentity(id, block));
+    identityRow.appendChild(block);
+  });
+}
+
+function selectIdentity(id, block) {
+  if (state.identity) return;
+  state.identity = id;
+  // 高亮选中
+  document.querySelectorAll('.identity-block').forEach(b => {
+    if (b !== block) b.style.opacity = '0.3';
+  });
+  block.style.borderColor = 'var(--gold-1)';
+  block.style.boxShadow = '0 0 40px rgba(255,215,0,0.25)';
+  // 渲染时辰
+  renderPeriods();
+  renderTimeline();
+  // 滚动到第一个时辰
+  setTimeout(() => {
+    const first = document.querySelector('.period-section');
+    if (first) first.scrollIntoView({ behavior: 'smooth' });
+  }, 400);
+}
+
+/* ==================== 渲染时间轴 ==================== */
+function renderTimeline() {
+  timeline.innerHTML = '';
+  periods.forEach((p, i) => {
+    const node = document.createElement('div');
+    node.className = 'timeline-node locked';
+    if (i < state.current) node.classList.add('completed');
+    if (i === state.current) node.classList.replace('locked', 'active');
+    if (state.choices[i] !== undefined) {
+      node.classList.remove('active', 'locked');
+      node.classList.add('completed');
+    }
+    node.innerHTML = `
+      <div class="timeline-dot"></div>
+      <span class="timeline-label">${p.name}</span>
+    `;
+    node.addEventListener('click', () => {
+      if (node.classList.contains('locked')) return;
+      const sec = document.querySelector(`.period-section[data-idx="${i}"]`);
+      if (sec) sec.scrollIntoView({ behavior: 'smooth' });
+    });
+    timeline.appendChild(node);
+  });
+}
+
+/* ==================== 渲染时辰 ==================== */
+function renderPeriods() {
+  periodsContainer.innerHTML = '';
+  periods.forEach((p, i) => {
+    const sec = document.createElement('section');
+    sec.className = 'period-section';
+    sec.dataset.idx = i;
+    sec.innerHTML = `
+      <div class="period-bg" style="background:${p.bg};"></div>
+      <div class="period-overlay"></div>
+      <div class="period-inner">
+        <p class="period-time">${p.time}</p>
+        <h2 class="period-title">${p.title}</h2>
+        <p class="period-poem">${p.poem.replace(/\n/g, '<br>')}</p>
+        <div class="choice-area" data-period="${i}">
+          ${p.choices.map((c, ci) => `
+            <div class="choice-block ${c.textChoice ? 'text-choice' : ''}" data-choice="${ci}">
+              <div class="choice-content">
+                <div class="choice-tag">${c.tag}</div>
+                <div class="choice-name">${c.name}</div>
+                <div class="choice-hint">${c.hint}</div>
+                <div class="choice-story">${c.story}</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+        <div class="next-btn-wrap">
+          <button class="next-btn" data-period="${i}">${i < periods.length - 1 ? '继续下一时辰' : '一日归途'}</button>
+        </div>
+        <div class="period-done">
+          <div class="period-done-tag" id="doneTag-${i}"></div>
+          <div class="period-done-img" id="doneImg-${i}" style="display:none;"><img src="" alt=""></div>
+          <p class="period-done-text" id="doneText-${i}"></p>
+        </div>
+      </div>
+    `;
+    periodsContainer.appendChild(sec);
+
+    // 设置背景图
+    p.choices.forEach((c, ci) => {
+      const block = sec.querySelector(`.choice-block[data-choice="${ci}"]`);
+      if (c.img) block.style.setProperty('--ch-img', `url('${c.img}')`);
+    });
+  });
+
+  // 绑定选择事件
+  document.querySelectorAll('.choice-block').forEach(block => {
+    block.addEventListener('click', () => {
+      const area = block.closest('.choice-area');
+      const pi = parseInt(area.dataset.period);
+      const ci = parseInt(block.dataset.choice);
+      makeChoice(pi, ci);
+    });
+  });
+
+  // 绑定继续按钮
+  document.querySelectorAll('.next-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const pi = parseInt(btn.dataset.period);
+      goNext(pi);
+    });
+  });
+}
+
+function makeChoice(pi, ci) {
+  if (state.choices[pi] !== undefined) return;
+  state.choices[pi] = ci;
+  const sec = document.querySelector(`.period-section[data-idx="${pi}"]`);
+  const area = sec.querySelector('.choice-area');
+  area.classList.add('locked');
+  const blocks = area.querySelectorAll('.choice-block');
+  blocks.forEach((b, i) => {
+    if (i === ci) {
+      b.classList.add('chosen');
+    } else {
+      b.classList.add('dismissed');
+    }
+  });
+  // 显示继续按钮
+  const wrap = sec.querySelector('.next-btn-wrap');
+  setTimeout(() => wrap.classList.add('shown'), 600);
+
+  // 更新导航与时间轴
+  updateNav();
+  renderTimeline();
+}
+
+function goNext(pi) {
+  if (pi < periods.length - 1) {
+    const next = document.querySelector(`.period-section[data-idx="${pi + 1}"]`);
+    if (next) {
+      next.scrollIntoView({ behavior: 'smooth' });
+      renderTimeline();
+    }
+  } else {
+    // 完成全部，显示总结与成就
+    showSummary();
+  }
+}
+
+function updateNav() {
+  navCount.textContent = state.choices.filter(v => v !== undefined).length;
+}
+
+/* ==================== 总结 ==================== */
+function showSummary() {
+  const list = document.getElementById('summaryList');
+  const idRow = document.getElementById('summaryIdentity');
+  idRow.innerHTML = `身份 · <span>${state.identity.name}</span> · ${state.identity.slogan}`;
+  list.innerHTML = '';
+  periods.forEach((p, i) => {
+    const ci = state.choices[i];
+    const c = p.choices[ci];
+    const row = document.createElement('div');
+    row.className = 'summary-row';
+    row.innerHTML = `
+      <div class="summary-time">${p.name}</div>
+      <div class="summary-divider"></div>
+      <div class="summary-choice">${c.name}</div>
+    `;
+    list.appendChild(row);
+    setTimeout(() => row.classList.add('shown'), 100 + i * 120);
+  });
+  summarySection.style.display = 'flex';
+  setTimeout(() => summarySection.scrollIntoView({ behavior: 'smooth' }), 300);
+  // 显示成就
+  setTimeout(() => showAchievement(), 1400);
+}
+
+function showAchievement() {
+  // 计算倾向
+  let food = 0, culture = 0, scenic = 0;
+  periods.forEach((p, i) => {
+    const ci = state.choices[i];
+    const t = p.choices[ci].type;
+    if (t === 'food') food++;
+    else if (t === 'culture') culture++;
+    else scenic++;
+  });
+  let title, char;
+  if (food > culture && food >= scenic) { title = '津门食客'; char = '食'; }
+  else if (culture > food && culture >= scenic) { title = '津门文人'; char = '文'; }
+  else { title = '津门游侠'; char = '游'; }
+  document.getElementById('achvChar').textContent = char;
+  document.getElementById('achvTitle').textContent = title;
+  achvOverlay.classList.add('active');
+  try {
+    var s = JSON.parse(localStorage.getItem('jinmenyou_game_completed') || '{}');
+    s.game4 = true;
+    localStorage.setItem('jinmenyou_game_completed', JSON.stringify(s));
+  } catch(e) {}
+}
+
+achvClose.addEventListener('click', () => achvOverlay.classList.remove('active'));
+
+/* ==================== 重新穿越 ==================== */
+replayBtn.addEventListener('click', () => {
+  state = { identity: null, current: 0, choices: [] };
+  updateNav();
+  identityRow.innerHTML = '';
+  periodsContainer.innerHTML = '';
+  timeline.innerHTML = '';
+  summarySection.style.display = 'none';
+  achvOverlay.classList.remove('active');
+  document.querySelectorAll('.identity-block').forEach(b => { b.style.opacity = '1'; b.style.borderColor = ''; b.style.boxShadow = ''; });
+  renderIdentities();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+/* ==================== 启程按钮 ==================== */
+startBtn.addEventListener('click', () => {
+  document.getElementById('identitySection').scrollIntoView({ behavior: 'smooth' });
+});
+
+/* ==================== 滚动视差 ==================== */
+window.addEventListener('scroll', () => {
+  const scrollY = window.scrollY;
+  topNav.classList.toggle('scrolled', scrollY > 60);
+  if (scrollY < window.innerHeight) {
+    heroBg.style.transform = `scale(1.1) translateY(${scrollY * 0.4}px)`;
+  }
+  // 检测当前时辰
+  const secs = document.querySelectorAll('.period-section');
+  secs.forEach((sec, i) => {
+    const rect = sec.getBoundingClientRect();
+    if (rect.top < window.innerHeight * 0.4 && rect.bottom > window.innerHeight * 0.4) {
+      if (state.current !== i && state.choices[i] === undefined) {
+        state.current = i;
+        renderTimeline();
+      }
+    }
+  });
+});
+
+/* ==================== 初始化 ==================== */
+renderIdentities();
+</script>
+</body>
+</html>

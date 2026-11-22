@@ -1,0 +1,1371 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>津门史话 · 天津历史文化之旅</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@300;400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold-light: #FFF8DC;
+    --gold-1: #FFD700;
+    --gold-2: #DAA520;
+    --gold-3: #B8860B;
+    --gold-glow: rgba(255, 215, 0, 0.5);
+    --ink: #050510;
+    --night: #0a0a1a;
+    --paper: #f0e6d0;
+    --paper-dark: #e0d4b8;
+    --ink-color: #2c1810;
+    --ink-light: #5c4033;
+    --leather: #3d2817;
+    --leather-light: #5c3d24;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    width: 100%;
+    min-height: 100vh;
+    font-family: 'Noto Serif SC', serif;
+    background: var(--ink);
+    color: #fff;
+    overflow: hidden;
+  }
+
+  /* ==================== 自定义光标 ==================== */
+  @media (hover: hover) and (pointer: fine) {
+    body { cursor: none; }
+    .cursor {
+      position: fixed;
+      width: 22px; height: 22px;
+      border: 1.5px solid var(--gold-1);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transition: width 0.25s, height 0.25s, background 0.25s;
+      mix-blend-mode: screen;
+      box-shadow: 0 0 18px var(--gold-glow);
+    }
+    .cursor::before {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 4px; height: 4px;
+      background: var(--gold-1);
+      border-radius: 50%;
+    }
+    .cursor.hover {
+      width: 44px; height: 44px;
+      background: rgba(255, 215, 0, 0.06);
+      border-color: var(--gold-light);
+    }
+  }
+
+  /* ==================== 背景 ==================== */
+  .ambient-bg {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    background:
+      radial-gradient(ellipse at 30% 40%, rgba(13, 27, 61, 0.4) 0%, transparent 50%),
+      radial-gradient(ellipse at 70% 60%, rgba(26, 10, 46, 0.3) 0%, transparent 50%),
+      var(--ink);
+    pointer-events: none;
+  }
+
+  .ambient-bg::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-image:
+      radial-gradient(1px 1px at 20px 30px, rgba(255,255,255,0.6), transparent),
+      radial-gradient(1px 1px at 80px 60px, rgba(255,215,0,0.4), transparent),
+      radial-gradient(1.5px 1.5px at 140px 90px, rgba(255,255,255,0.5), transparent),
+      radial-gradient(1px 1px at 200px 120px, rgba(255,215,0,0.3), transparent);
+    background-size: 250px 250px;
+    animation: twinkle 5s ease-in-out infinite;
+  }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.8; }
+    50% { opacity: 0.4; }
+  }
+
+  #particleCanvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /* ==================== 导航 ==================== */
+  .back-btn {
+    position: fixed;
+    top: 26px; left: 36px;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 22px;
+    background: rgba(5, 5, 16, 0.6);
+    border: 1px solid rgba(255, 215, 0, 0.25);
+    color: var(--gold-1);
+    text-decoration: none;
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 400;
+    font-size: 13px;
+    letter-spacing: 3px;
+    transition: all 0.35s ease;
+    backdrop-filter: blur(10px);
+  }
+
+  .back-btn:hover {
+    background: rgba(255, 215, 0, 0.08);
+    border-color: var(--gold-1);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.15);
+    transform: translateX(-4px);
+  }
+
+  .back-btn .arrow { transition: transform 0.3s ease; }
+  .back-btn:hover .arrow { transform: translateX(-3px); }
+
+  .page-header {
+    position: fixed;
+    top: 26px; right: 36px;
+    z-index: 1000;
+    text-align: right;
+  }
+
+  .page-title {
+    font-family: 'Ma Shan Zheng', cursive;
+    font-size: 26px;
+    background: linear-gradient(180deg, var(--gold-light), var(--gold-1), var(--gold-2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 18px rgba(255, 215, 0, 0.3));
+    letter-spacing: 6px;
+  }
+
+  .page-subtitle {
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 300;
+    font-size: 11px;
+    color: rgba(255, 215, 0, 0.45);
+    letter-spacing: 5px;
+    margin-top: 4px;
+  }
+
+  /* ==================== 书本容器 ==================== */
+  .book-stage {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    perspective: 2200px;
+  }
+
+  .book {
+    position: relative;
+    width: 880px;
+    height: 580px;
+    transform-style: preserve-3d;
+    transition: transform 1.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .book.closed { transform: rotateY(0deg) scale(1); }
+  .book.open { transform: rotateY(0deg) scale(1); }
+
+  /* 书脊 */
+  .book-spine {
+    position: absolute;
+    left: 50%; top: 0;
+    width: 36px; height: 100%;
+    background: linear-gradient(90deg, #2a1a0e, #4a3420 50%, #2a1a0e);
+    transform: translateX(-50%);
+    z-index: 100;
+    box-shadow: 0 0 30px rgba(0,0,0,0.6);
+  }
+
+  /* 封面 */
+  .book-cover {
+    position: absolute;
+    width: 50%; height: 100%;
+    top: 0;
+    background:
+      linear-gradient(135deg, #2d1a0a 0%, #4a3018 50%, #2d1a0a 100%);
+    box-shadow: inset 0 0 80px rgba(0,0,0,0.5), 0 12px 50px rgba(0,0,0,0.6);
+    transition: transform 1.6s cubic-bezier(0.16, 1, 0.3, 1);
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+  }
+
+  .book-cover.front {
+    left: 50%;
+    transform-origin: left center;
+    z-index: 50;
+  }
+
+  .book-cover.back {
+    left: 0;
+    transform-origin: right center;
+    z-index: 49;
+  }
+
+  .book.open .book-cover.front {
+    transform: rotateY(-170deg);
+  }
+
+  /* 封面纹理 */
+  .cover-texture {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background:
+      url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.015' numOctaves='6' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.15 0 0 0 0 0.08 0 0 0 0 0.03 0 0 0 0.4 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  .cover-border {
+    position: absolute;
+    top: 28px; left: 28px;
+    right: 28px; bottom: 28px;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    pointer-events: none;
+  }
+
+  .cover-border::before {
+    content: '';
+    position: absolute;
+    top: 6px; left: 6px;
+    right: 6px; bottom: 6px;
+    border: 1px solid rgba(255, 215, 0, 0.15);
+  }
+
+  .cover-corner {
+    position: absolute;
+    width: 28px; height: 28px;
+    border-color: var(--gold-1);
+    border-style: solid;
+    border-width: 0;
+  }
+
+  .cover-corner.tl { top: -2px; left: -2px; border-width: 2px 0 0 2px; }
+  .cover-corner.tr { top: -2px; right: -2px; border-width: 2px 2px 0 0; }
+  .cover-corner.bl { bottom: -2px; left: -2px; border-width: 0 0 2px 2px; }
+  .cover-corner.br { bottom: -2px; right: -2px; border-width: 0 2px 2px 0; }
+
+  .cover-content {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    width: 100%;
+  }
+
+  .cover-title {
+    font-family: 'Ma Shan Zheng', cursive;
+    font-size: 48px;
+    background: linear-gradient(180deg, var(--gold-light), var(--gold-1), var(--gold-2), var(--gold-3));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 18px rgba(255, 215, 0, 0.35));
+    letter-spacing: 12px;
+    margin-bottom: 20px;
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    display: inline-block;
+  }
+
+  .cover-subtitle {
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 300;
+    font-size: 13px;
+    color: rgba(255, 215, 0, 0.5);
+    letter-spacing: 6px;
+    margin-top: 16px;
+  }
+
+  .open-hint {
+    position: absolute;
+    bottom: 44px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 300;
+    font-size: 12px;
+    color: rgba(255, 215, 0, 0.45);
+    letter-spacing: 4px;
+    animation: pulseHint 2.5s ease-in-out infinite;
+  }
+
+  @keyframes pulseHint {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.9; }
+  }
+
+  /* ==================== 书页内容 ==================== */
+  .book-pages {
+    position: absolute;
+    width: 50%; height: 100%;
+    top: 0; left: 50%;
+    background: var(--paper);
+    background-image:
+      url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.012' numOctaves='5' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.8 0 0 0 0 0.7 0 0 0 0 0.5 0 0 0 0.12 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E");
+    overflow: hidden;
+    box-shadow: inset 35px 0 35px -35px rgba(0,0,0,0.35);
+  }
+
+  .book-page {
+    position: absolute;
+    width: 100%; height: 100%;
+    padding: 36px 32px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+    overflow-y: auto;
+  }
+
+  .book-page.active { opacity: 1; visibility: visible; }
+
+  .book-page::-webkit-scrollbar { width: 3px; }
+  .book-page::-webkit-scrollbar-track { background: transparent; }
+  .book-page::-webkit-scrollbar-thumb { background: rgba(139, 105, 20, 0.3); border-radius: 2px; }
+
+  /* ==================== 目录页 ==================== */
+  .toc-page {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .toc-title {
+    font-family: 'Ma Shan Zheng', cursive;
+    font-size: 34px;
+    color: var(--ink-color);
+    letter-spacing: 10px;
+    margin-bottom: 8px;
+  }
+
+  .toc-subtitle {
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 300;
+    font-size: 12px;
+    color: var(--ink-light);
+    letter-spacing: 5px;
+    margin-bottom: 24px;
+  }
+
+  .toc-divider {
+    width: 70px; height: 1px;
+    margin: 0 auto 24px;
+    background: linear-gradient(90deg, transparent, var(--gold-3), transparent);
+  }
+
+  .toc-list {
+    list-style: none;
+    padding: 0;
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  .toc-list::-webkit-scrollbar { width: 3px; }
+  .toc-list::-webkit-scrollbar-thumb { background: rgba(139, 105, 20, 0.25); border-radius: 2px; }
+
+  .toc-item {
+    padding: 12px 22px;
+    margin-bottom: 4px;
+    border-bottom: 1px dashed rgba(139, 105, 20, 0.2);
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: none;
+  }
+
+  .toc-item:hover {
+    background: rgba(218, 165, 32, 0.08);
+    transform: translateX(8px);
+    border-bottom-color: var(--gold-3);
+  }
+
+  .toc-item-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .toc-number {
+    font-family: 'Ma Shan Zheng', cursive;
+    font-size: 18px;
+    color: var(--gold-3);
+    width: 28px;
+  }
+
+  .toc-item-title {
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--ink-color);
+    letter-spacing: 2px;
+  }
+
+  .toc-item-period {
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 300;
+    font-size: 10px;
+    color: var(--ink-light);
+    letter-spacing: 1px;
+  }
+
+  .toc-item-arrow {
+    color: var(--gold-3);
+    font-size: 13px;
+    opacity: 0;
+    transform: translateX(-8px);
+    transition: all 0.3s ease;
+  }
+
+  .toc-item:hover .toc-item-arrow { opacity: 1; transform: translateX(0); }
+
+  /* 语音开关 */
+  .voice-control {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(139, 105, 20, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+  }
+
+  .voice-control-label {
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 400;
+    font-size: 12px;
+    color: var(--ink-light);
+    letter-spacing: 2px;
+  }
+
+  .voice-toggle {
+    position: relative;
+    width: 46px; height: 24px;
+    background: rgba(139, 105, 20, 0.15);
+    border: 1px solid rgba(139, 105, 20, 0.3);
+    border-radius: 12px;
+    cursor: none;
+    transition: all 0.3s ease;
+  }
+
+  .voice-toggle::after {
+    content: '';
+    position: absolute;
+    top: 2px; left: 2px;
+    width: 18px; height: 18px;
+    background: var(--gold-3);
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+  }
+
+  .voice-toggle.active {
+    background: rgba(218, 165, 32, 0.35);
+    border-color: var(--gold-2);
+  }
+
+  .voice-toggle.active::after {
+    left: 24px;
+    background: var(--gold-1);
+    box-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+  }
+
+  .voice-status {
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 400;
+    font-size: 11px;
+    color: var(--gold-3);
+    min-width: 36px;
+    text-align: left;
+  }
+
+  /* ==================== 场景页 ==================== */
+  .scene-page { padding: 24px 28px; }
+
+  .scene-page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+
+  .scene-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 400;
+    font-size: 12px;
+    color: var(--ink-light);
+    cursor: none;
+    padding: 5px 12px;
+    border: 1px solid rgba(139, 105, 20, 0.25);
+    transition: all 0.3s ease;
+  }
+
+  .scene-back:hover {
+    background: rgba(218, 165, 32, 0.1);
+    border-color: var(--gold-3);
+    color: var(--ink-color);
+  }
+
+  .scene-voice-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 400;
+    font-size: 11px;
+    color: var(--gold-3);
+    cursor: none;
+    padding: 5px 12px;
+    border: 1px solid rgba(218, 165, 32, 0.3);
+    transition: all 0.3s ease;
+    background: rgba(255, 215, 0, 0.03);
+  }
+
+  .scene-voice-btn:hover {
+    background: rgba(255, 215, 0, 0.12);
+    border-color: var(--gold-2);
+  }
+
+  .scene-voice-btn.playing {
+    background: rgba(255, 165, 0, 0.15);
+    border-color: var(--gold-1);
+  }
+
+  .scene-header { margin-bottom: 14px; }
+
+  .scene-period-label {
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 300;
+    font-size: 11px;
+    color: var(--gold-3);
+    letter-spacing: 2px;
+    margin-bottom: 5px;
+  }
+
+  .scene-title {
+    font-family: 'Ma Shan Zheng', cursive;
+    font-size: 28px;
+    color: var(--ink-color);
+    letter-spacing: 4px;
+  }
+
+  /* 场景图 */
+  .scene-viewer {
+    position: relative;
+    width: 100%;
+    height: 190px;
+    overflow: hidden;
+    margin-bottom: 14px;
+    border: 1px solid rgba(139, 105, 20, 0.2);
+    box-shadow: 0 4px 18px rgba(0,0,0,0.12);
+    cursor: none;
+  }
+
+  .scene-image {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 8s ease;
+    filter: brightness(0.85) saturate(1.05);
+  }
+
+  .scene-viewer:hover .scene-image { transform: scale(1.08); }
+
+  .scene-overlay {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: linear-gradient(180deg, transparent 45%, rgba(44, 24, 16, 0.65) 100%);
+    pointer-events: none;
+  }
+
+  /* 热点 */
+  .hotspot {
+    position: absolute;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--gold-1) 0%, var(--gold-2) 100%);
+    border: 1.5px solid rgba(255, 248, 220, 0.7);
+    cursor: none;
+    z-index: 10;
+    animation: hotspotPulse 2.5s ease-in-out infinite;
+    box-shadow: 0 0 12px rgba(255, 215, 0, 0.5);
+  }
+
+  .hotspot::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 5px; height: 5px;
+    background: #fff;
+    border-radius: 50%;
+  }
+
+  @keyframes hotspotPulse {
+    0%, 100% { transform: scale(1); box-shadow: 0 0 12px rgba(255, 215, 0, 0.5); }
+    50% { transform: scale(1.25); box-shadow: 0 0 22px rgba(255, 215, 0, 0.8); }
+  }
+
+  .hotspot-label {
+    position: absolute;
+    top: -24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(44, 24, 16, 0.92);
+    color: var(--gold-1);
+    padding: 3px 8px;
+    font-size: 10px;
+    font-family: 'Noto Serif SC', serif;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    letter-spacing: 1px;
+  }
+
+  .hotspot:hover .hotspot-label { opacity: 1; }
+
+  /* 弹窗 */
+  .hotspot-popup {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) scale(0.92);
+    width: 380px;
+    background: var(--paper);
+    border: 1px solid var(--gold-2);
+    padding: 28px;
+    z-index: 2000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.35s ease;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+
+  .hotspot-popup.show {
+    opacity: 1; visibility: visible;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  .hotspot-popup h3 {
+    font-family: 'Ma Shan Zheng', cursive;
+    font-size: 22px;
+    color: var(--ink-color);
+    margin-bottom: 12px;
+    letter-spacing: 2px;
+  }
+
+  .hotspot-popup p {
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 400;
+    font-size: 13px;
+    color: var(--ink-light);
+    line-height: 1.8;
+    letter-spacing: 1px;
+  }
+
+  .hotspot-popup-close {
+    position: absolute;
+    top: 12px; right: 12px;
+    width: 26px; height: 26px;
+    border: 1px solid var(--gold-2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: none;
+    color: var(--gold-3);
+    font-size: 13px;
+    transition: all 0.3s ease;
+  }
+
+  .hotspot-popup-close:hover { background: var(--gold-2); color: #fff; }
+
+  .popup-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.55);
+    z-index: 1999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .popup-overlay.show { opacity: 1; visibility: visible; }
+
+  /* 文字介绍 */
+  .scene-description {
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 400;
+    font-size: 13px;
+    color: var(--ink-color);
+    line-height: 2;
+    letter-spacing: 1px;
+    text-indent: 2em;
+  }
+
+  .scene-description p { margin-bottom: 8px; }
+
+  /* 地理信息 */
+  .geo-info {
+    display: flex;
+    gap: 12px;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px dashed rgba(139, 105, 20, 0.2);
+  }
+
+  .geo-item { flex: 1; text-align: center; }
+
+  .geo-label {
+    font-size: 10px;
+    color: var(--ink-light);
+    letter-spacing: 2px;
+    margin-bottom: 3px;
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 300;
+  }
+
+  .geo-value {
+    font-family: 'Ma Shan Zheng', cursive;
+    font-size: 14px;
+    color: var(--gold-3);
+  }
+
+  /* 翻页 */
+  .page-turn-hint {
+    position: absolute;
+    bottom: 14px; right: 22px;
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 300;
+    font-size: 10px;
+    color: rgba(139, 105, 20, 0.4);
+    letter-spacing: 2px;
+    pointer-events: none;
+  }
+
+  .page-turn-hint-left {
+    position: absolute;
+    bottom: 14px; left: 22px;
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 300;
+    font-size: 10px;
+    color: rgba(139, 105, 20, 0.4);
+    letter-spacing: 2px;
+    pointer-events: none;
+  }
+
+  .page-click-zone {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 50%;
+    z-index: 5;
+    cursor: none;
+  }
+
+  .page-click-zone.next { right: 0; }
+  .page-click-zone.prev { left: 0; }
+
+  .page-click-zone::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 26px; height: 52px;
+    background: var(--gold-2);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    border-radius: 3px;
+  }
+
+  .page-click-zone:hover::after { opacity: 0.2; }
+
+  .page-click-zone.next::after {
+    right: 8px;
+    clip-path: polygon(0 0, 100% 50%, 0 100%);
+  }
+
+  .page-click-zone.prev::after {
+    left: 8px;
+    clip-path: polygon(100% 0, 0 50%, 100% 100%);
+  }
+
+  /* 翻页动画 */
+  .page-turn-enter { animation: pageTurnIn 0.6s ease forwards; }
+  .page-turn-exit { animation: pageTurnOut 0.6s ease forwards; }
+
+  @keyframes pageTurnIn {
+    0% { opacity: 0; transform: translateX(50px) rotateY(-12deg); }
+    100% { opacity: 1; transform: translateX(0) rotateY(0); }
+  }
+
+  @keyframes pageTurnOut {
+    0% { opacity: 1; transform: translateX(0) rotateY(0); }
+    100% { opacity: 0; transform: translateX(-50px) rotateY(12deg); }
+  }
+
+  /* 响应式 */
+  @media (max-width: 1000px) {
+    .book { width: 94vw; height: 78vh; }
+    .cover-title { font-size: 36px; }
+    .scene-viewer { height: 160px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 自定义光标 -->
+<div class="cursor" id="cursor"></div>
+
+<!-- 背景 -->
+<div class="ambient-bg"></div>
+<canvas id="particleCanvas"></canvas>
+
+<!-- 返回按钮 -->
+<a href="index.html" class="back-btn" id="backBtn">
+  <span class="arrow">←</span>
+  <span>返回主页</span>
+</a>
+
+<!-- 页面标题 -->
+<div class="page-header">
+  <div class="page-title">津門史話</div>
+  <div class="page-subtitle">TIANJIN HISTORY</div>
+</div>
+
+<!-- 书本 -->
+<div class="book-stage">
+  <div class="book closed" id="book">
+    <div class="book-spine"></div>
+
+    <!-- 后封面 -->
+    <div class="book-cover back">
+      <div class="cover-texture"></div>
+      <div class="cover-border">
+        <div class="cover-corner tl"></div>
+        <div class="cover-corner tr"></div>
+        <div class="cover-corner bl"></div>
+        <div class="cover-corner br"></div>
+      </div>
+    </div>
+
+    <!-- 书页 -->
+    <div class="book-pages">
+      <!-- 目录 -->
+      <div class="book-page toc-page active" id="tocPage">
+        <h2 class="toc-title">目 录</h2>
+        <p class="toc-subtitle">CONTENTS</p>
+        <div class="toc-divider"></div>
+        <ul class="toc-list" id="tocList"></ul>
+        <div class="voice-control">
+          <span class="voice-control-label">语音播报</span>
+          <div class="voice-toggle" id="voiceToggle"></div>
+          <span class="voice-status" id="voiceStatus">关闭</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 前封面 -->
+    <div class="book-cover front" id="bookCover">
+      <div class="cover-texture"></div>
+      <div class="cover-border">
+        <div class="cover-corner tl"></div>
+        <div class="cover-corner tr"></div>
+        <div class="cover-corner bl"></div>
+        <div class="cover-corner br"></div>
+      </div>
+      <div class="cover-content">
+        <div class="cover-title">津門史話</div>
+        <div class="cover-subtitle">六百年津门沧桑</div>
+      </div>
+      <div class="open-hint">点击翻开书卷</div>
+    </div>
+  </div>
+</div>
+
+<!-- 弹窗 -->
+<div class="popup-overlay" id="popupOverlay"></div>
+<div class="hotspot-popup" id="hotspotPopup">
+  <div class="hotspot-popup-close" id="popupClose">×</div>
+  <h3 id="popupTitle"></h3>
+  <p id="popupContent"></p>
+</div>
+
+<script>
+  // ==================== 历史数据 ====================
+  const historyPeriods = [
+    {
+      id: 'sui-tang',
+      number: '壹',
+      title: '三会海口',
+      period: '隋唐 · 大运河时期',
+      years: '约605年 — 907年',
+      image: 'assets/history-sui-tang-new.jpg',
+      description: [
+        '隋唐时期，天津地区的城市起源与运河交通体系密切相关。大业年间，隋炀帝开凿大运河，使南、北运河与海河交汇处逐渐形成航运节点。',
+        '唐代中叶以后，天津成为南方粮、绸北运的水陆码头，三岔河口一带因南运河、北运河与海河交汇而成为"三会海口"，是天津最早的发祥地之一。',
+        '此时的天津尚未形成城市，但漕运与海河交汇的地理优势已初步显现，为后世城市发展奠定了基础。三岔河口是天津城市空间格局的源头。'
+      ],
+      geo: { location: '三岔河口', feature: '三河交汇', status: '漕运码头' },
+      hotspots: [
+        { x: '35%', y: '45%', name: '三会海口', desc: '南运河、北运河与海河三河交汇处，是天津最早的航运节点，唐代已成为粮绸北运的重要水陆码头。' },
+        { x: '20%', y: '60%', name: '漕运码头', desc: '唐代漕运兴盛，大量南方粮食、丝绸经由此地运往北方，河畔逐渐形成集市与聚落。' },
+        { x: '70%', y: '35%', name: '渔村聚落', desc: '早期天津地区以渔业和漕运为生的村落散布于河两岸，是城市雏形的起源。' }
+      ]
+    },
+    {
+      id: 'jin-yuan',
+      number: '贰',
+      title: '直沽寨',
+      period: '金元时期',
+      years: '1125年 — 1368年',
+      image: 'assets/history-jin-yuan-new.jpg',
+      description: [
+        '金朝贞元元年（1153年）迁都燕京后，天津北部隶中都路，三岔河口成为中都通向各地水路的咽喉。',
+        '金贞祐元年（1213年），朝廷在三汊河口西南岸设直沽寨，派都统和副都统驻守，标志着天津地区正式出现军事据点。',
+        '直沽寨地处南北运河交汇的水陆要冲，北可经潞水至通州、中都，南可经御河通苏北、山东，东经海河与海路相连，兼有河港与海港性质。元代更名为"海津镇"，漕运、海运进一步繁荣。'
+      ],
+      geo: { location: '三汊河口', feature: '军事要塞', status: '海津镇' },
+      hotspots: [
+        { x: '30%', y: '40%', name: '直沽寨', desc: '金代设立的军事要塞，木栅栏环绕，驻有重兵守护漕运咽喉，是天津最早的军事建制。' },
+        { x: '75%', y: '55%', name: '海津渡口', desc: '海河与运河交汇处的重要渡口，南来北往的漕船、商船在此停靠，"晓日三叉口，连樯集万艘"。' },
+        { x: '55%', y: '25%', name: '望海楼', desc: '建于高处的瞭望楼阁，用于观察海面和河道船只动态，兼作军事预警之用。' }
+      ]
+    },
+    {
+      id: 'ming-dynasty',
+      number: '叁',
+      title: '天津卫城',
+      period: '明朝',
+      years: '1404年 — 1644年',
+      image: 'assets/history-ming-new.jpg',
+      description: [
+        '1403年，朱棣因直沽为"天子渡河之地"赐名"天津"。永乐二年（1404年），朝廷在直沽设天津卫，随后又设天津左卫、天津右卫。',
+        '卫城为砖砌方形城池，周长九里十三步，奠定了天津老城的格局。永乐初年，朱棣以直沽为"海运商舶往来之冲"设卫筑城。',
+        '天津从此由渡口集镇发展为军事重镇。三岔河口一带逐渐形成港口、集市与城居空间，南运河南岸估衣街、海河西岸天后宫周围很快发展为码头和集市。'
+      ],
+      geo: { location: '天津老城', feature: '方形卫城', status: '军事重镇' },
+      hotspots: [
+        { x: '50%', y: '50%', name: '天津卫城', desc: '明永乐二年筑城，砖砌方城，周长九里十三步，设四座城门，奠定了天津老城的基本格局。' },
+        { x: '15%', y: '70%', name: '南运河码头', desc: '南运河畔的码头区，估衣街一带逐渐形成繁华集市，是天津最早的商业中心。' },
+        { x: '80%', y: '60%', name: '天后宫', desc: '海河西岸的天后宫始建于元代，是漕运船工祭祀海神的场所，周围逐渐形成庙会集市。' },
+        { x: '35%', y: '35%', name: '鼓楼', desc: '位于卫城中心的鼓楼，晨钟暮鼓，是城市的心脏和地标建筑。' }
+      ]
+    },
+    {
+      id: 'qing-kangxi',
+      number: '肆',
+      title: '畿辅门户',
+      period: '清朝前中期',
+      years: '1644年 — 1860年',
+      image: 'assets/history-qing-new.jpg',
+      description: [
+        '清朝康雍年间，天津由卫所改州县，逐步从军事卫所转向地方行政管理中心。清顺治九年（1652年），三卫合一，归并于天津卫。',
+        '天津成为京畿重镇，"当河海之要冲，为畿辅之门户"，商业、漕运、盐业和手工业进一步繁荣。',
+        '这一时期，天津从"拱卫京师"的军事卫城，演变为北方重要的商贸、盐业和漕运城市。南北客商云集，会馆林立，城市人口迅速增长。'
+      ],
+      geo: { location: '天津府城', feature: '商贸重镇', status: '畿辅门户' },
+      hotspots: [
+        { x: '50%', y: '25%', name: '天津府衙', desc: '清代天津府的行政中心，管理地方政务，标志着天津从军事卫所向行政城市的转变。' },
+        { x: '20%', y: '65%', name: '估衣街', desc: '天津最古老的商业街，绸缎庄、皮货庄、银楼林立，是清代天津商业繁荣的缩影。' },
+        { x: '75%', y: '70%', name: '盐运码头', desc: '长芦盐运使司驻天津，盐业成为天津经济支柱之一，盐商富甲一方。' },
+        { x: '40%', y: '80%', name: '南北货栈', desc: '南方的茶叶、丝绸、瓷器与北方的皮毛、药材在此中转交易，天津成为北方商品集散地。' }
+      ]
+    },
+    {
+      id: 'concession',
+      number: '伍',
+      title: '开埠风云',
+      period: '近代开埠与租界',
+      years: '1860年 — 1949年',
+      image: 'assets/history-concession-new.jpg',
+      description: [
+        '1860年天津被辟为通商口岸后，英、法、德、俄、日、意、奥匈、比、美九国相继在老城东南部设立租界，天津成为中国北方开放的前沿。',
+        '由天津开始的军事近代化，以及铁路、电报、电话、邮政、采矿、近代教育、司法等方面建设，均开全国之先河。',
+        '天津站始建于1886年，曾以"老龙头火车站"之名闻名；五大道原是英租界高级住宅区，后形成大规模西洋近代建筑群。1927年建成的万国桥，即后来的解放桥，也成为天津近代开埠的重要标志。'
+      ],
+      geo: { location: '九国租界', feature: '中西交融', status: '北方商埠' },
+      hotspots: [
+        { x: '55%', y: '35%', name: '老龙头火车站', desc: '即今天津站前身，始建于1886年，是中国最早的火车站之一，见证了中国铁路发展史。' },
+        { x: '25%', y: '65%', name: '有轨电车', desc: '天津是中国最早开通有轨电车的城市之一，1906年白牌电车围城转，开创了城市公共交通先河。' },
+        { x: '70%', y: '50%', name: '西洋建筑群', desc: '九国租界带来了各式西洋建筑，哥特式、罗马式、巴洛克式风格各异，被誉为"万国建筑博览会"。' },
+        { x: '85%', y: '75%', name: '海河码头', desc: '开埠后海河成为国际航运通道，各国商船往来不绝，天津成为中国北方最大的通商口岸。' }
+      ]
+    },
+    {
+      id: 'modern',
+      number: '陆',
+      title: '渤海明珠',
+      period: '当代天津',
+      years: '1978年 — 至今',
+      image: 'assets/history-modern-new.jpg',
+      description: [
+        '改革开放以来，天津的港口优势不断增强，对外交往进一步扩大。进入20世纪90年代，天津启动工业东移战略，滨海新区逐渐崛起。',
+        '2005年，天津滨海新区被写入"十一五规划"并纳入国家发展战略，成为现代化国际港口大都市和中国北方重要经济中心城市。',
+        '新世纪以来，天津形成滨海新区、中心城区双核心发展格局，周大福金融中心、天津之眼、天津文化中心等成为新地标，城市空间从老城厢向外拓展为现代都市格局。'
+      ],
+      geo: { location: '滨海双城', feature: '双核心发展', status: '国际港口城市' },
+      hotspots: [
+        { x: '25%', y: '55%', name: '天津之眼', desc: '世界唯一一座桥上摩天轮，跨越海河之上，是当代天津最具辨识度的城市地标。' },
+        { x: '58%', y: '40%', name: '周大福金融中心', desc: '位于滨海新区的摩天大楼，高530米，是天津第一高楼，象征着滨海新区的崛起。' },
+        { x: '70%', y: '70%', name: '京津城际', desc: '中国首条时速350公里的高速铁路，2008年开通，天津与北京形成半小时生活圈。' },
+        { x: '45%', y: '85%', name: '海河夜景', desc: '经过综合治理的海河两岸灯光璀璨，夜景游成为天津旅游名片，展现现代都市魅力。' }
+      ]
+    }
+  ];
+
+  // ==================== 语音播报 ====================
+  let voiceEnabled = false;
+  let currentUtterance = null;
+  let isSpeaking = false;
+  let currentSpeakingIndex = -1;
+  const speechSupported = 'speechSynthesis' in window;
+
+  function toggleVoice() {
+    voiceEnabled = !voiceEnabled;
+    const toggle = document.getElementById('voiceToggle');
+    const status = document.getElementById('voiceStatus');
+    if (voiceEnabled) {
+      toggle.classList.add('active');
+      status.textContent = '开启';
+      status.style.color = 'var(--gold-1)';
+      if (currentPage > 0 && isBookOpen) speakPeriod(currentPage - 1);
+    } else {
+      toggle.classList.remove('active');
+      status.textContent = '关闭';
+      status.style.color = '';
+      stopSpeaking();
+    }
+  }
+
+  function speakPeriod(index) {
+    if (!voiceEnabled || !speechSupported) return;
+    stopSpeaking();
+    const period = historyPeriods[index];
+    const fullText = period.title + '。' + period.period + '。' + period.description.join('');
+    const utterance = new SpeechSynthesisUtterance(fullText);
+    utterance.lang = 'zh-CN';
+    utterance.rate = 0.95;
+    utterance.pitch = 1;
+    utterance.volume = 1;
+    const voices = window.speechSynthesis.getVoices();
+    const zhVoice = voices.find(v => v.lang.includes('zh') || v.lang.includes('CN'));
+    if (zhVoice) utterance.voice = zhVoice;
+    utterance.onstart = () => { isSpeaking = true; currentSpeakingIndex = index; updateVoiceButtonState(true); };
+    utterance.onend = () => {
+      isSpeaking = false; updateVoiceButtonState(false);
+      if (voiceEnabled && currentPage > 0 && currentPage < historyPeriods.length) {
+        setTimeout(() => { if (voiceEnabled && currentPage > 0 && currentPage < historyPeriods.length) turnToNextPage(); }, 1500);
+      }
+    };
+    utterance.onerror = () => { isSpeaking = false; updateVoiceButtonState(false); };
+    currentUtterance = utterance;
+    window.speechSynthesis.speak(utterance);
+  }
+
+  function stopSpeaking() {
+    if (speechSupported && window.speechSynthesis.speaking) window.speechSynthesis.cancel();
+    isSpeaking = false; currentSpeakingIndex = -1; currentUtterance = null;
+    updateVoiceButtonState(false);
+  }
+
+  function updateVoiceButtonState(playing) {
+    document.querySelectorAll('.scene-voice-btn').forEach(btn => {
+      if (playing) { btn.classList.add('playing'); btn.innerHTML = '<span>▶</span> 播放中'; }
+      else { btn.classList.remove('playing'); btn.innerHTML = '<span>♪</span> 语音朗读'; }
+    });
+  }
+
+  if (speechSupported) {
+    window.speechSynthesis.getVoices();
+    window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+  }
+
+  // ==================== 自定义光标 ====================
+  const cursor = document.getElementById('cursor');
+  let mx = 0, my = 0, cx = 0, cy = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+
+  function animateCursor() {
+    cx += (mx - cx) * 0.18; cy += (my - cy) * 0.18;
+    cursor.style.left = cx - 11 + 'px'; cursor.style.top = cy - 11 + 'px';
+    requestAnimationFrame(animateCursor);
+  }
+  animateCursor();
+
+  function bindHover() {
+    document.querySelectorAll('a, .toc-item, .scene-back, .hotspot, #bookCover, .hotspot-popup-close, .back-btn, .voice-toggle, .scene-voice-btn, .page-click-zone').forEach(el => {
+      el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+      el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+    });
+  }
+
+  // ==================== 粒子背景 ====================
+  const canvas = document.getElementById('particleCanvas');
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+  let mPos = { x: null, y: null };
+
+  function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+  document.addEventListener('mousemove', e => { mPos.x = e.clientX; mPos.y = e.clientY; });
+
+  class Particle {
+    constructor() {
+      this.x = Math.random() * canvas.width;
+      this.y = Math.random() * canvas.height;
+      this.size = Math.random() * 1.2 + 0.3;
+      this.speedX = (Math.random() - 0.5) * 0.2;
+      this.speedY = (Math.random() - 0.5) * 0.2;
+      this.opacity = Math.random() * 0.35 + 0.1;
+      this.gold = Math.random() > 0.6;
+    }
+    update() {
+      this.x += this.speedX; this.y += this.speedY;
+      if (mPos.x !== null) {
+        const dx = mPos.x - this.x, dy = mPos.y - this.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 110) { const f = (110 - dist) / 110; this.x -= dx * f * 0.01; this.y -= dy * f * 0.01; }
+      }
+      if (this.x < 0) this.x = canvas.width;
+      if (this.x > canvas.width) this.x = 0;
+      if (this.y < 0) this.y = canvas.height;
+      if (this.y > canvas.height) this.y = 0;
+    }
+    draw() {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      if (this.gold) {
+        ctx.fillStyle = `rgba(255, 215, 0, ${this.opacity})`;
+        ctx.shadowColor = 'rgba(255, 215, 0, 0.5)'; ctx.shadowBlur = 5;
+      } else {
+        ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity * 0.35})`; ctx.shadowBlur = 0;
+      }
+      ctx.fill();
+    }
+  }
+
+  function initParticles() {
+    particles = [];
+    const count = Math.min(70, Math.floor(canvas.width * canvas.height / 25000));
+    for (let i = 0; i < count; i++) particles.push(new Particle());
+  }
+  initParticles();
+  window.addEventListener('resize', initParticles);
+
+  function animateParticles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => { p.update(); p.draw(); });
+    requestAnimationFrame(animateParticles);
+  }
+  animateParticles();
+
+  // ==================== 书本交互 ====================
+  const book = document.getElementById('book');
+  const bookCover = document.getElementById('bookCover');
+  const tocList = document.getElementById('tocList');
+  const bookPages = document.querySelector('.book-pages');
+  let isBookOpen = false;
+  let currentPage = 0;
+
+  function generateTOC() {
+    historyPeriods.forEach((period, index) => {
+      const li = document.createElement('li');
+      li.className = 'toc-item';
+      li.dataset.index = index;
+      li.innerHTML = `
+        <div class="toc-item-left">
+          <span class="toc-number">${period.number}</span>
+          <div><div class="toc-item-title">${period.title}</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <span class="toc-item-period">${period.period}</span>
+          <span class="toc-item-arrow">→</span>
+        </div>`;
+      li.addEventListener('click', () => openScene(index));
+      tocList.appendChild(li);
+    });
+  }
+
+  function generateScenePages() {
+    historyPeriods.forEach((period, index) => {
+      const page = document.createElement('div');
+      page.className = 'book-page scene-page';
+      page.id = `scene-${index}`;
+      page.innerHTML = `
+        <div class="page-click-zone prev" data-action="prev"></div>
+        <div class="page-click-zone next" data-action="next"></div>
+        <div class="scene-page-header">
+          <div class="scene-back" onclick="event.stopPropagation(); goToTOC();">← 返回目录</div>
+          <div class="scene-voice-btn" onclick="event.stopPropagation(); toggleSceneVoice(${index});"><span>♪</span> 语音朗读</div>
+        </div>
+        <div class="scene-header">
+          <div class="scene-period-label">${period.period} · ${period.years}</div>
+          <h2 class="scene-title">${period.title}</h2>
+        </div>
+        <div class="scene-viewer" id="viewer-${index}">
+          <img src="${period.image}" alt="${period.title}" class="scene-image">
+          <div class="scene-overlay"></div>
+          ${period.hotspots.map((hs, i) => `<div class="hotspot" style="left:${hs.x};top:${hs.y};" data-period="${index}" data-hotspot="${i}"><div class="hotspot-label">${hs.name}</div></div>`).join('')}
+        </div>
+        <div class="scene-description">${period.description.map(p => `<p>${p}</p>`).join('')}</div>
+        <div class="geo-info">
+          <div class="geo-item"><div class="geo-label">地理位置</div><div class="geo-value">${period.geo.location}</div></div>
+          <div class="geo-item"><div class="geo-label">城市特征</div><div class="geo-value">${period.geo.feature}</div></div>
+          <div class="geo-item"><div class="geo-label">城市地位</div><div class="geo-value">${period.geo.status}</div></div>
+        </div>
+        <div class="page-turn-hint-left">${index > 0 ? '← 上一页' : ''}</div>
+        <div class="page-turn-hint">${index < historyPeriods.length - 1 ? '下一页 →' : ''}</div>`;
+      bookPages.appendChild(page);
+    });
+    document.querySelectorAll('.hotspot').forEach(hs => {
+      hs.addEventListener('click', e => {
+        e.stopPropagation();
+        showHotspotPopup(historyPeriods[parseInt(hs.dataset.period)].hotspots[parseInt(hs.dataset.hotspot)]);
+      });
+    });
+    document.querySelectorAll('.page-click-zone').forEach(zone => {
+      zone.addEventListener('click', e => {
+        e.stopPropagation();
+        if (zone.dataset.action === 'next') turnToNextPage();
+        else turnToPrevPage();
+      });
+    });
+  }
+
+  bookCover.addEventListener('click', () => {
+    if (!isBookOpen) {
+      book.classList.add('open'); book.classList.remove('closed');
+      isBookOpen = true;
+      setTimeout(() => { if (voiceEnabled) speakTOCIntroduction(); }, 1800);
+    }
+  });
+
+  function speakTOCIntroduction() {
+    if (!voiceEnabled || !speechSupported) return;
+    stopSpeaking();
+    const intro = '欢迎来到津门史话。本书共收录天津六个重要历史时期，从隋唐三会海口，到当代渤海明珠，带您穿越六百年津门沧桑。请点击目录中的条目，开启历史之旅。';
+    const utterance = new SpeechSynthesisUtterance(intro);
+    utterance.lang = 'zh-CN'; utterance.rate = 0.95;
+    utterance.onend = () => { isSpeaking = false; };
+    currentUtterance = utterance; isSpeaking = true;
+    window.speechSynthesis.speak(utterance);
+  }
+
+  function toggleSceneVoice(index) {
+    if (isSpeaking && currentSpeakingIndex === index) stopSpeaking();
+    else {
+      voiceEnabled = true;
+      document.getElementById('voiceToggle').classList.add('active');
+      document.getElementById('voiceStatus').textContent = '开启';
+      document.getElementById('voiceStatus').style.color = 'var(--gold-1)';
+      speakPeriod(index);
+    }
+  }
+
+  function openScene(index) {
+    stopSpeaking();
+    document.querySelectorAll('.book-page').forEach(p => {
+      if (p.classList.contains('active')) {
+        p.classList.add('page-turn-exit');
+        setTimeout(() => p.classList.remove('active', 'page-turn-exit'), 500);
+      }
+    });
+    setTimeout(() => {
+      const newPage = document.getElementById(`scene-${index}`);
+      newPage.classList.add('active', 'page-turn-enter');
+      setTimeout(() => newPage.classList.remove('page-turn-enter'), 600);
+      currentPage = index + 1;
+      if (voiceEnabled) setTimeout(() => speakPeriod(index), 700);
+    }, 300);
+  }
+
+  function goToTOC() {
+    stopSpeaking();
+    document.querySelectorAll('.book-page').forEach(p => {
+      if (p.classList.contains('active')) {
+        p.classList.add('page-turn-exit');
+        setTimeout(() => p.classList.remove('active', 'page-turn-exit'), 500);
+      }
+    });
+    setTimeout(() => {
+      document.getElementById('tocPage').classList.add('active', 'page-turn-enter');
+      setTimeout(() => document.getElementById('tocPage').classList.remove('page-turn-enter'), 600);
+      currentPage = 0;
+    }, 300);
+  }
+
+  function turnToNextPage() {
+    if (currentPage === 0) openScene(0);
+    else if (currentPage < historyPeriods.length) openScene(currentPage);
+  }
+
+  function turnToPrevPage() {
+    if (currentPage > 1) openScene(currentPage - 2);
+    else if (currentPage === 1) goToTOC();
+  }
+
+  // 弹窗
+  const popupOverlay = document.getElementById('popupOverlay');
+  const hotspotPopup = document.getElementById('hotspotPopup');
+  const popupClose = document.getElementById('popupClose');
+
+  function showHotspotPopup(hotspot) {
+    document.getElementById('popupTitle').textContent = hotspot.name;
+    document.getElementById('popupContent').textContent = hotspot.desc;
+    popupOverlay.classList.add('show');
+    hotspotPopup.classList.add('show');
+  }
+
+  function hideHotspotPopup() { popupOverlay.classList.remove('show'); hotspotPopup.classList.remove('show'); }
+  popupOverlay.addEventListener('click', hideHotspotPopup);
+  popupClose.addEventListener('click', hideHotspotPopup);
+
+  // 语音开关
+  document.getElementById('voiceToggle').addEventListener('click', toggleVoice);
+
+  // 键盘
+  document.addEventListener('keydown', e => {
+    if (!isBookOpen) return;
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); turnToNextPage(); }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); turnToPrevPage(); }
+    else if (e.key === 'Escape') {
+      if (popupOverlay.classList.contains('show')) hideHotspotPopup();
+      else if (currentPage > 0) goToTOC();
+    }
+  });
+
+  // 初始化
+  generateTOC();
+  generateScenePages();
+  bindHover();
+</script>
+
+</body>
+</html>

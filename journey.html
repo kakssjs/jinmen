@@ -1,0 +1,406 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>启程 · 津门游</title>
+<link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold-1: #FFD700;
+  --gold-2: #FFA500;
+  --gold-3: #DAA520;
+  --gold-dim: rgba(255, 215, 0, 0.35);
+  --ink-black: #050510;
+  --night-blue: #0d1b3d;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--ink-black);
+  color: #fff;
+  font-family: 'Noto Serif SC', serif;
+  overflow-x: hidden;
+}
+
+/* ========== Nav ========== */
+.top-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 5%;
+  background: rgba(5, 5, 16, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 215, 0, 0.08);
+  transition: background 0.4s;
+}
+.nav-logo {
+  font-family: 'Ma Shan Zheng', cursive;
+  font-size: 26px;
+  background: linear-gradient(135deg, var(--gold-1), var(--gold-2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 4px;
+  text-decoration: none;
+}
+.back-link {
+  font-family: 'ZCOOL XiaoWei', serif;
+  font-size: 14px;
+  color: var(--gold-dim);
+  text-decoration: none;
+  letter-spacing: 2px;
+  transition: color 0.3s;
+}
+.back-link:hover { color: var(--gold-1); }
+
+/* ========== Hero ========== */
+.hero {
+  position: relative;
+  height: 100vh;
+  min-height: 600px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hero-bg {
+  position: absolute; inset: 0;
+  background: url('assets/journey-hero.png') center / cover no-repeat;
+  transform: scale(1.1);
+  will-change: transform;
+}
+.hero-overlay {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at center, transparent 0%, rgba(5,5,16,0.5) 60%, rgba(5,5,16,0.9) 100%);
+}
+.hero-content {
+  position: relative; z-index: 2;
+  text-align: center;
+}
+.hero-title {
+  font-family: 'Ma Shan Zheng', cursive;
+  font-size: 180px;
+  background: linear-gradient(135deg, var(--gold-1) 20%, var(--gold-2) 50%, var(--gold-3) 80%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 40px;
+  line-height: 1;
+  text-shadow: 0 0 80px rgba(255, 215, 0, 0.3);
+  opacity: 0;
+  transform: translateY(60px);
+  animation: heroIn 1.4s cubic-bezier(0.23, 1, 0.32, 1) 0.3s forwards;
+}
+.hero-subtitle {
+  font-family: 'ZCOOL XiaoWei', serif;
+  font-size: 18px;
+  color: rgba(255, 215, 0, 0.5);
+  letter-spacing: 12px;
+  margin-top: 20px;
+  opacity: 0;
+  animation: heroIn 1.2s ease 0.8s forwards;
+}
+.hero-line {
+  width: 1px; height: 60px;
+  background: linear-gradient(to bottom, transparent, var(--gold-dim), transparent);
+  margin: 30px auto 0;
+  opacity: 0;
+  animation: heroIn 1s ease 1.2s forwards;
+}
+.hero-scroll-hint {
+  position: absolute; bottom: 40px; left: 50%;
+  transform: translateX(-50%);
+  font-family: 'ZCOOL XiaoWei', serif;
+  font-size: 12px;
+  color: rgba(255, 215, 0, 0.3);
+  letter-spacing: 4px;
+  opacity: 0;
+  animation: heroIn 1s ease 1.5s forwards, bob 2s ease-in-out 2.5s infinite;
+}
+@keyframes heroIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes bob {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(8px); }
+}
+
+/* ========== Game Sections ========== */
+.game-section {
+  position: relative;
+  height: 100vh;
+  min-height: 600px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+.game-section.bg-dark { background: var(--ink-black); }
+.game-section.bg-blue { background: var(--night-blue); }
+
+.game-image {
+  position: absolute; inset: 0;
+  background-size: cover;
+  background-position: center;
+  transform: scale(1.05);
+  transition: transform 1.2s cubic-bezier(0.23, 1, 0.32, 1);
+  will-change: transform;
+}
+.game-section.in-view .game-image {
+  transform: scale(1);
+}
+.game-image-overlay {
+  position: absolute; inset: 0;
+  transition: opacity 0.6s;
+}
+.game-section.align-right .game-image-overlay {
+  background: linear-gradient(270deg, transparent 30%, rgba(5,5,16,0.95) 70%);
+}
+.game-section.align-left .game-image-overlay {
+  background: linear-gradient(90deg, transparent 30%, rgba(5,5,16,0.95) 70%);
+}
+
+.game-content {
+  position: relative; z-index: 2;
+  width: 50%;
+  padding: 0 8%;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s ease 0.2s, transform 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.2s;
+}
+.game-section.in-view .game-content {
+  opacity: 1;
+  transform: translateY(0);
+}
+.game-section.align-right .game-content { margin-left: auto; }
+
+.game-numeral {
+  font-family: 'Ma Shan Zheng', cursive;
+  font-size: 100px;
+  color: rgba(255, 215, 0, 0.1);
+  line-height: 0.8;
+  margin-bottom: 10px;
+}
+.game-title {
+  font-family: 'Ma Shan Zheng', cursive;
+  font-size: 52px;
+  color: var(--gold-1);
+  letter-spacing: 8px;
+  margin-bottom: 6px;
+  line-height: 1.2;
+}
+.game-tagline {
+  font-family: 'ZCOOL XiaoWei', serif;
+  font-size: 13px;
+  color: rgba(255, 215, 0, 0.35);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+}
+.game-divider {
+  width: 40px; height: 2px;
+  background: linear-gradient(90deg, var(--gold-1), transparent);
+  margin-bottom: 24px;
+}
+.game-desc {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 15px;
+  line-height: 2;
+  color: rgba(255, 255, 255, 0.55);
+  margin-bottom: 36px;
+  max-width: 440px;
+}
+.game-enter {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: 'ZCOOL XiaoWei', serif;
+  font-size: 16px;
+  color: var(--gold-1);
+  text-decoration: none;
+  letter-spacing: 4px;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+  transition: all 0.4s;
+}
+.game-enter:hover {
+  color: var(--gold-2);
+  border-bottom-color: var(--gold-1);
+  letter-spacing: 6px;
+}
+.game-enter-arrow {
+  display: inline-block;
+  transition: transform 0.4s;
+}
+.game-enter:hover .game-enter-arrow {
+  transform: translateX(8px);
+}
+
+/* ========== Footer ========== */
+.site-footer {
+  text-align: center;
+  padding: 60px 20px;
+  background: var(--ink-black);
+  border-top: 1px solid rgba(255, 215, 0, 0.05);
+}
+.footer-text {
+  font-family: 'ZCOOL XiaoWei', serif;
+  font-size: 13px;
+  color: rgba(255, 215, 0, 0.2);
+  letter-spacing: 6px;
+}
+
+/* ========== Particle Canvas ========== */
+canvas { position: fixed; top: 0; left: 0; z-index: 1; pointer-events: none; }
+
+/* ========== Responsive ========== */
+@media (max-width: 768px) {
+  .hero-title { font-size: 80px; letter-spacing: 16px; }
+  .game-content { width: 90%; padding: 0 5%; }
+  .game-section.align-right .game-content { margin-left: 0; }
+  .game-section.align-left .game-image-overlay,
+  .game-section.align-right .game-image-overlay {
+    background: linear-gradient(180deg, transparent 20%, rgba(5,5,16,0.95) 60%);
+  }
+  .game-title { font-size: 36px; letter-spacing: 4px; }
+  .game-numeral { font-size: 70px; }
+}
+</style>
+</head>
+<body>
+<canvas id="particleCanvas"></canvas>
+
+<nav class="top-nav">
+  <a href="index.html" class="nav-logo">津门游</a>
+  <a href="index.html" class="back-link">← 返回主页</a>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-bg" id="heroBg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <h1 class="hero-title">启程</h1>
+    <p class="hero-subtitle">四 重 体 验 · 沉 浸 津 门</p>
+    <div class="hero-line"></div>
+  </div>
+  <div class="hero-scroll-hint">向 下 滚 动</div>
+</section>
+
+<!-- Game 1: 海河漂流记 -->
+<section class="game-section bg-dark align-right" data-game="1">
+  <div class="game-image" style="background-image: url('assets/game1-hero.png');"></div>
+  <div class="game-image-overlay"></div>
+  <div class="game-content">
+    <div class="game-numeral">壹</div>
+    <h2 class="game-title">海河漂流记</h2>
+    <p class="game-tagline">SCROLL · EXPLORE · COLLECT</p>
+    <div class="game-divider"></div>
+    <p class="game-desc">登船启航，沿海河顺流而下。途经六座名桥，每至一码头停靠探索。景点、美食、人文故事等你发现，完成互动挑战，收集通关印章。</p>
+    <a href="game1-river.html" class="game-enter">登船启航 <span class="game-enter-arrow">→</span></a>
+  </div>
+</section>
+
+<!-- Game 2: 通关文牒 -->
+<section class="game-section bg-blue align-left" data-game="2">
+  <div class="game-image" style="background-image: url('assets/game2-hero.png');"></div>
+  <div class="game-image-overlay"></div>
+  <div class="game-content">
+    <div class="game-numeral">贰</div>
+    <h2 class="game-title">通关文牒</h2>
+    <p class="game-tagline">PASSPORT · QUIZ · STAMP</p>
+    <div class="game-divider"></div>
+    <p class="game-desc">领取通关文牒，挑战天津三大主题闯关。景点拼图、美食连线、人文问答，每过一关获得金色印章，集满通关成为津门达人。</p>
+    <a href="game2-passport.html" class="game-enter">领取文牒 <span class="game-enter-arrow">→</span></a>
+  </div>
+</section>
+
+<!-- Game 3: 津门寻宝图 -->
+<section class="game-section bg-dark align-right" data-game="3">
+  <div class="game-image" style="background-image: url('assets/game3-hero.png');"></div>
+  <div class="game-image-overlay"></div>
+  <div class="game-content">
+    <div class="game-numeral">叁</div>
+    <h2 class="game-title">津门寻宝图</h2>
+    <p class="game-tagline">MAP · DISCOVER · HIDDEN</p>
+    <div class="game-divider"></div>
+    <p class="game-desc">探索天津六大城区的寻宝地图，点击散布的宝藏标记，发现隐藏的景点、美食与人文瑰宝。集齐十二宝藏，解锁津门百晓生成就。</p>
+    <a href="game3-treasure.html" class="game-enter">开启寻宝 <span class="game-enter-arrow">→</span></a>
+  </div>
+</section>
+
+<!-- Game 4: 时光穿越 -->
+<section class="game-section bg-blue align-left" data-game="4">
+  <div class="game-image" style="background-image: url('assets/game4-hero.png');"></div>
+  <div class="game-image-overlay"></div>
+  <div class="game-content">
+    <div class="game-numeral">肆</div>
+    <h2 class="game-title">时光穿越</h2>
+    <p class="game-tagline">NARRATIVE · CHOICE · DESTINY</p>
+    <div class="game-divider"></div>
+    <p class="game-desc">选择身份，在天津度过从清晨到深夜的十二个时辰。每个时辰都有选择等待你——去古文化街听相声？还是去西北角吃早点？你的津门一日由你决定。</p>
+    <a href="game4-timetravel.html" class="game-enter">穿越时光 <span class="game-enter-arrow">→</span></a>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <p class="footer-text">津 门 游 · 沉 浸 式 天 津 文 化 之 旅</p>
+</footer>
+
+<script>
+// Particle background
+const canvas = document.getElementById('particleCanvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+resize();
+window.addEventListener('resize', resize);
+
+for (let i = 0; i < 50; i++) {
+  particles.push({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    r: Math.random() * 1.2 + 0.3,
+    vx: (Math.random() - 0.5) * 0.2,
+    vy: (Math.random() - 0.5) * 0.2,
+    a: Math.random() * 0.4 + 0.05,
+    c: Math.random() > 0.5 ? '255,215,0' : '255,255,255'
+  });
+}
+function tick() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles.forEach(p => {
+    p.x += p.vx; p.y += p.vy;
+    if (p.x < 0) p.x = canvas.width;
+    if (p.x > canvas.width) p.x = 0;
+    if (p.y < 0) p.y = canvas.height;
+    if (p.y > canvas.height) p.y = 0;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(${p.c},${p.a})`;
+    ctx.fill();
+  });
+  requestAnimationFrame(tick);
+}
+tick();
+
+// Hero parallax
+const heroBg = document.getElementById('heroBg');
+window.addEventListener('scroll', () => {
+  const scrolled = window.pageYOffset;
+  if (scrolled < window.innerHeight) {
+    heroBg.style.transform = `scale(1.1) translateY(${scrolled * 0.4}px)`;
+  }
+});
+
+// Section reveal with IntersectionObserver
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('in-view');
+    }
+  });
+}, { threshold: 0.3 });
+
+document.querySelectorAll('.game-section').forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
